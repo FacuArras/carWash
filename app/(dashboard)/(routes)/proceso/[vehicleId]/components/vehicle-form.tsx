@@ -31,7 +31,7 @@ import toast from "react-hot-toast";
 import * as z from "zod";
 
 interface VehicleFormProps {
-  initialData: Vehicle;
+  initialData: Vehicle | null;
 }
 
 const formSchema = z.object({
@@ -54,10 +54,20 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
 
   const form = useForm<VehicleFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      ...initialData,
-      observations: initialData.observations ?? undefined,
-    },
+    defaultValues: initialData
+      ? {
+          ...initialData,
+          observations: initialData.observations ?? undefined,
+        }
+      : {
+          vehicle: "",
+          licensePlate: "",
+          color: "",
+          phoneNumber: undefined,
+          price: undefined,
+          typeOfCarWash: "",
+          observations: "",
+        },
   });
 
   const onSubmit = async (values: VehicleFormValues) => {
