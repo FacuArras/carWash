@@ -1,5 +1,6 @@
 import prismadb from "@/lib/prismadb";
 import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { CarClient } from "./components/client";
 import { CarColumn } from "./components/columns";
 import { formatter } from "@/lib/utils";
@@ -22,7 +23,11 @@ const InProcessPage = async () => {
     licensePlate: item.licensePlate,
     color: item.color,
     typeOfCarWash: item.typeOfCarWash,
-    createdAt: format(item.createdAt, "HH:mm"),
+    createdAt: formatInTimeZone(
+      item.createdAt,
+      "America/Argentina/Cordoba",
+      "HH:mm"
+    ),
     observations: item.observations ? item.observations : "Ninguna",
   }));
 
