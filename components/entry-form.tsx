@@ -53,12 +53,6 @@ const EntryForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    function capitalizeFirstWord(word: string) {
-      if (word.length === 0) return word;
-
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    }
-
     try {
       setLoading(true);
 
@@ -66,7 +60,6 @@ const EntryForm = () => {
         ...values,
         licensePlate: values.licensePlate.toUpperCase(),
         phoneNumber: values.phoneNumber.toString(),
-        color: capitalizeFirstWord(values.color),
       };
 
       await axios.post(`/api/vehicleForm`, valuesToSubmit);
@@ -84,7 +77,7 @@ const EntryForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-1 px-5 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-10 mb-10">
+        <div className="grid grid-cols-1 px-3 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
           <FormField
             control={form.control}
             name="vehicle"
@@ -216,7 +209,7 @@ const EntryForm = () => {
             )}
           />
         </div>
-        <Button type="submit" className="ml-auto block">
+        <Button type="submit" className="ml-auto mr-3 block">
           Ingresar datos
         </Button>
         <Toaster />

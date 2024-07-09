@@ -23,11 +23,12 @@ const InProcessPage = async ({ params }: { params: { storeId: string } }) => {
     createdAt: format(item.createdAt, "yyyy do MMM, HH:mm", { locale: es }),
     price: formatter.format(item.price),
     phoneNumber: item.phoneNumber,
+    observations: item.observations ? item.observations : "Ninguna",
   }));
 
   return (
     <div className="flex-col">
-      <div className="flex-1 space-y-4 pt-6">
+      <div className="flex-1 space-y-4 pt-7">
         <CarClient data={formattedData} />
       </div>
     </div>

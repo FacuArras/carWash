@@ -56,12 +56,12 @@ const Navigation = () => {
         <SheetDescription>
           <SheetContent
             side="right"
-            className="px-2 rounded-tl-lg rounded-bl-lg bg-gradient-to-r from-[#006aa1] via-[#005b8a] to-[#004c73] border-none"
+            className="rounded-tl-lg rounded-bl-lg bg-gradient-to-r from-[#006aa1] via-[#005b8a] to-[#004c73] border-none"
           >
             <div className="relative">
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute -top-4 -right-1 z-50 p-1 rounded-full text-white bg-transparent hover:bg-white/20 transition"
+                className="absolute -top-4 -right-5 z-50 p-1 rounded-full text-white bg-transparent hover:bg-white/20 transition"
               >
                 <X className="size-8" />
               </button>
@@ -72,7 +72,7 @@ const Navigation = () => {
                     variant="outline"
                     onClick={() => onClick(route.href)}
                     className={cn(
-                      "text-xl font-normal hover:bg-white/20 hover:text-white border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-white focus:bg-white/30 transition",
+                      "text-lg font-normal hover:bg-white/20 hover:text-white border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-white focus:bg-white/30 transition",
                       route.href === pathname
                         ? "bg-white/10 text-white"
                         : "bg-transparent"

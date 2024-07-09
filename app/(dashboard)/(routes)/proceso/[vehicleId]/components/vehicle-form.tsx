@@ -23,7 +23,6 @@ import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Vehicle } from "@prisma/client";
 import axios from "axios";
-import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -123,21 +122,18 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
         onConfirm={onDelete}
         loading={loading}
       />
-      <div className="flex items-center justify-between">
-        <Heading title={"Modificá el vehículo ingresado"} description={""} />
-        <Button
-          disabled={loading}
-          variant="destructive"
-          size="icon"
-          onClick={() => setOpen(true)}
-        >
-          <Trash className="h-4 w-4" />
-        </Button>
+      <div className="pb-2">
+        <Heading
+          title={"Modificá el vehículo ingresado"}
+          description={
+            "Si tuviste algún error en el formulario de entrada, corregilo acá!"
+          }
+        />
       </div>
       <Separator />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 px-5 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-10 mb-10">
+          <div className="grid grid-cols-1 px-3 pt-2 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
             <FormField
               control={form.control}
               name="vehicle"
@@ -271,9 +267,19 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
               )}
             />
           </div>
-          <Button type="submit" className="ml-auto block">
-            Modificar datos
-          </Button>
+          <div className="flex justify-end gap-x-3 mr-3">
+            <Button
+              disabled={loading}
+              variant="destructive"
+              size="icon"
+              className="w-fit px-4"
+              onClick={() => setOpen(true)}
+              type="button"
+            >
+              Eliminar datos
+            </Button>
+            <Button type="submit">Modificar datos</Button>
+          </div>
         </form>
       </Form>
     </>

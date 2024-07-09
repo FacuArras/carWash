@@ -11,12 +11,13 @@ export type CarColumn = {
   phoneNumber: string;
   typeOfCarWash: string;
   createdAt: string;
+  observations: string;
 };
 
 export const columns: ColumnDef<CarColumn>[] = [
   {
     accessorKey: "createdAt",
-    header: "Hora de ingreso",
+    header: "Ingreso",
   },
   {
     accessorKey: "licensePlate",
@@ -32,7 +33,11 @@ export const columns: ColumnDef<CarColumn>[] = [
   },
   {
     accessorKey: "typeOfCarWash",
-    header: "Tipo de lavado",
+    header: "Tipo",
+  },
+  {
+    accessorKey: "observations",
+    header: "Observaciones",
   },
   { accessorKey: "price", header: "Precio" },
   {

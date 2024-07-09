@@ -18,7 +18,7 @@ export type CarColumn = {
 export const columns: ColumnDef<CarColumn>[] = [
   {
     accessorKey: "createdAt",
-    header: "Hora de ingreso",
+    header: "Ingreso",
   },
   {
     accessorKey: "licensePlate",
@@ -31,7 +31,7 @@ export const columns: ColumnDef<CarColumn>[] = [
   },
   {
     accessorKey: "typeOfCarWash",
-    header: "Tipo de lavado",
+    header: "Tipo",
   },
   {
     accessorKey: "price",

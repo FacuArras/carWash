@@ -17,10 +17,14 @@ export const CarClient: React.FC<CarClientProps> = ({ data }) => {
   return (
     <>
       <Heading
-        title={`Historial de vehículos lavados (${data.length})`}
+        title={`Historial de vehículos lavados`}
         description="Administra los vehículos que ya terminaron su proceso de lavado."
       />
-      <Separator />
+      <Separator className="my-6" />
+      <p className="text-md my-4">
+        Total lavados hasta el momento:{" "}
+        <span className="font-bold tracking-wider">({data.length})</span>
+      </p>
       <DataTable columns={columns} data={data} searchKey="licensePlate" />
     </>
   );

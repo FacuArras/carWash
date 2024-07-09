@@ -49,7 +49,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     <>
       <AlertModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          window.location.href = `/historial`;
+        }}
         onConfirm={onDelete}
         loading={loading}
       />

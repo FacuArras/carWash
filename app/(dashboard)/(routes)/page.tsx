@@ -9,7 +9,7 @@ const Home = () => {
         title="Formulario de ingreso"
         description="Completá el formulario con los datos del vehículo ingresante."
       />
-      <Separator className="mt-5 mb-7" />
+      <Separator className="my-6" />
       <EntryForm />
     </div>
   );
