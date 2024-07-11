@@ -1,12 +1,14 @@
 import prismadb from "@/lib/prismadb";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { vehicleId: string } }
+    { params }: { params: { clientId: string, vehicleId: string } }
 ) {
     try {
         const body = await req.json();
+        const { userId }: { userId: string | null } = auth();
 
         const { vehicle, licensePlate,
             color,
@@ -14,6 +16,10 @@ export async function PATCH(
             price,
             typeOfCarWash,
             observations } = body;
+
+        if (!userId) {
+            return new NextResponse("Unauthenticated", { status: 401 });
+        };
 
         if (!vehicle) {
             return new NextResponse("Vehicle Plate is required", { status: 400 });
@@ -39,6 +45,17 @@ export async function PATCH(
             return new NextResponse("The type of car wash is required", { status: 400 });
         };
 
+        const clientByUserId = await prismadb.client.findFirst({
+            where: {
+                id: params.clientId,
+                userId
+            }
+        });
+
+        if (!clientByUserId) {
+            return new NextResponse("Unauthorized", { status: 403 });
+        };
+
         const vehicleUpdated = await prismadb.vehicle.updateMany({
             where: {
                 id: params.vehicleId,
@@ -49,7 +66,8 @@ export async function PATCH(
                 phoneNumber,
                 price,
                 typeOfCarWash,
-                observations
+                observations,
+                clientId: params.clientId
             }
         });
 
@@ -62,11 +80,28 @@ export async function PATCH(
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { vehicleId: string } }
+    { params }: { params: { clientId: string, vehicleId: string } }
 ) {
     try {
+        const { userId }: { userId: string | null } = auth();
+
+        if (!userId) {
+            return new NextResponse("Unauthenticated", { status: 401 });
+        };
+
         if (!params.vehicleId) {
             return new NextResponse("Vehicle id is required", { status: 400 });
+        };
+
+        const clientByUserId = await prismadb.client.findFirst({
+            where: {
+                id: params.clientId,
+                userId
+            }
+        });
+
+        if (!clientByUserId) {
+            return new NextResponse("Unauthorized", { status: 403 });
         };
 
         const vehicleDeleted = await prismadb.vehicle.deleteMany({

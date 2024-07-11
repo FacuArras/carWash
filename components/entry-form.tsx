@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -38,6 +38,7 @@ const formSchema = z.object({
 const EntryForm = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const params = useParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,9 +63,9 @@ const EntryForm = () => {
         phoneNumber: values.phoneNumber.toString(),
       };
 
-      await axios.post(`/api/vehicleForm`, valuesToSubmit);
+      await axios.post(`/api/${params.clientId}/vehicle`, valuesToSubmit);
 
-      router.push(`/proceso`);
+      router.push(`/${params.clientId}/proceso`);
       router.refresh();
       toast.success("Vehículo registrado!");
     } catch (error) {
@@ -85,6 +86,7 @@ const EntryForm = () => {
               <FormItem>
                 <FormLabel>Vehículo</FormLabel>
                 <Select
+                  name="vehicle"
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
@@ -179,6 +181,7 @@ const EntryForm = () => {
               <FormItem>
                 <FormLabel>Tipo de lavado</FormLabel>
                 <Select
+                  name="typeOfCarWash"
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >

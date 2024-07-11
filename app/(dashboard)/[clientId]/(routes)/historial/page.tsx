@@ -5,9 +5,10 @@ import prismadb from "@/lib/prismadb";
 import { es } from "date-fns/locale";
 import { formatter } from "@/lib/utils";
 
-const InProcessPage = async ({ params }: { params: { storeId: string } }) => {
+const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
   const vehicles = await prismadb.vehicle.findMany({
     where: {
+      clientId: params.clientId,
       washed: true,
     },
     orderBy: {

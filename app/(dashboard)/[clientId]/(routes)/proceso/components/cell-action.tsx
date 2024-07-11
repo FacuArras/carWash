@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CarColumn } from "./columns";
 import { Button } from "@/components/ui/button";
-import { CheckIcon, Copy, Edit, MoreHorizontal } from "lucide-react";
+import { CheckIcon, Edit, MoreHorizontal } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 
 interface CellActionProps {
@@ -20,10 +20,13 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
+  const params = useParams();
 
   const onReady = async () => {
     try {
-      await axios.patch(`/api/vehicleForm/${data.id}/ready`, { washed: true });
+      await axios.patch(`/api/${params.clientId}/vehicle/${data.id}/ready`, {
+        washed: true,
+      });
 
       toast.success("Vehículo lavado!");
 
@@ -55,7 +58,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             Lavado
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/proceso/${data.id}`)}
+            onClick={() =>
+              router.push(`/${params.clientId}/proceso/${data.id}`)
+            }
             className="cursor-pointer"
           >
             <Edit className="mr-2 h-4 w-4" />

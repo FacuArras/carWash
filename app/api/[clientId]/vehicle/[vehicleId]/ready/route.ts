@@ -1,17 +1,28 @@
 import prismadb from "@/lib/prismadb";
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { vehicleId: string } }
+    { params }: { params: { clientId: string, vehicleId: string } }
 ) {
     try {
         const body = await req.json();
+        const { userId }: { userId: string | null } = auth();
 
-        const { washed } = body;
+        if (!userId) {
+            return new NextResponse("Unauthenticated", { status: 401 });
+        };
 
-        if (!washed) {
-            return new NextResponse("Washed boolean is required", { status: 400 });
+        const clientByUserId = await prismadb.client.findFirst({
+            where: {
+                id: params.clientId,
+                userId
+            }
+        });
+
+        if (!clientByUserId) {
+            return new NextResponse("Unauthorized", { status: 403 });
         };
 
         const vehicleUpdated = await prismadb.vehicle.updateMany({

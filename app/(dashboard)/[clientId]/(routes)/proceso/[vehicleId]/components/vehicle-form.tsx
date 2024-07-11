@@ -85,7 +85,10 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
         color: capitalizeFirstWord(values.color),
       };
 
-      await axios.patch(`/api/vehicleForm/${params.vehicleId}`, valuesToSubmit);
+      await axios.patch(
+        `/api/${params.clientId}/vehicle/${params.vehicleId}`,
+        valuesToSubmit
+      );
 
       toast.success("Vehículo actualizado!");
     } catch (error) {
@@ -93,7 +96,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
       toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
-      window.location.href = `/proceso`;
+      window.location.href = `/${params.clientId}/proceso`;
     }
   };
 
@@ -141,6 +144,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
                 <FormItem>
                   <FormLabel>Vehículo</FormLabel>
                   <Select
+                    name="vehicle"
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
@@ -235,6 +239,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
                 <FormItem>
                   <FormLabel>Tipo de lavado</FormLabel>
                   <Select
+                    name="typeOfCarWash"
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >

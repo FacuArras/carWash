@@ -1,13 +1,13 @@
 import prismadb from "@/lib/prismadb";
-import { format } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { CarClient } from "./components/client";
 import { CarColumn } from "./components/columns";
 import { formatter } from "@/lib/utils";
 
-const InProcessPage = async () => {
+const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
   const vehicles = await prismadb.vehicle.findMany({
     where: {
+      clientId: params.clientId,
       washed: false,
     },
     orderBy: {

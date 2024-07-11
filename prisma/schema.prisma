@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Client {
+  id            String         @id @default(uuid()) @map("_id")
+  name          String
+  userId        String
+  createdAt     DateTime       @default(now())
+  vehicles      Vehicle[]      @relation("ClientToVehicle")
+  configuration Configuration? @relation("ClientToConfig")
+}
+
 model Vehicle {
   id            String   @id @default(uuid()) @map("_id")
   vehicle       String
@@ -19,6 +28,17 @@ model Vehicle {
   washed        Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  client        Client   @relation("ClientToVehicle", fields: [clientId], references: [id])
+  clientId      String   @unique
 
   @@index([licensePlate])
+}
+
+model Configuration {
+  id            String   @id @default(uuid()) @map("_id")
+  vehicle       String[] @default(["auto", "moto"])
+  typeOfCarWash String[] @default(["completo", "interior", "solo exterior"])
+  message       String   @default("Tu 'vehículo' patente 'patente' de color 'color', ya está listo para que lo retires!")
+  Client        Client?  @relation("ClientToConfig", fields: [clientId], references: [id])
+  clientId      String   @unique
 }

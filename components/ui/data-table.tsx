@@ -52,6 +52,7 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center pb-4">
         <Input
+          name="searchTable"
           placeholder="Buscar por patente..."
           value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>

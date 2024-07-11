@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CarColumn } from "./columns";
 import { Button } from "@/components/ui/button";
-import { CheckIcon, Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import AlertModal from "@/components/modals/alert-modal";
@@ -21,7 +21,7 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const router = useRouter();
+  const params = useParams();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -30,12 +30,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     try {
       setLoading(true);
 
-      await axios.delete(`/api/vehicleForm/${data.id}`);
+      await axios.delete(`/api/${params.clientId}/vehicle/${data.id}`);
 
       toast.success("Vehículo eliminado.");
 
       setTimeout(() => {
-        window.location.href = `/historial`;
+        window.location.href = `/${params.clientId}/historial`;
       }, 1500);
     } catch (error) {
       toast.error("Algo salió mal...");
@@ -51,7 +51,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         isOpen={open}
         onClose={() => {
           setOpen(false);
-          window.location.href = `/historial`;
+          window.location.href = `/${params.clientId}/historial`;
         }}
         onConfirm={onDelete}
         loading={loading}

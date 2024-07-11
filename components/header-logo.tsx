@@ -4,8 +4,8 @@ import Image from "next/image";
 const HeaderLogo = () => {
   return (
     <Link href="/">
-      <div className="items-center hidden lg:flex">
-        <Image src="/logo.svg" alt="Logo" height={28} width={28} />
+      <div className="items-center hidden lg:flex relative w-[28px] h-[28px]">
+        <Image src="/logo.svg" alt="Logo" fill className="object-contain" />
       </div>
     </Link>
   );

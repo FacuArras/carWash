@@ -3,7 +3,7 @@
 import NavButton from "@/components/nav-button";
 import { useState } from "react";
 import { useMedia } from "react-use";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -15,30 +15,31 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const routes = [
-  {
-    href: "/",
-    label: "Formulario de ingreso",
-  },
-  {
-    href: "/proceso",
-    label: "Vehículos en proceso",
-  },
-  {
-    href: "/historial",
-    label: "Historial de lavados",
-  },
-  {
-    href: "/configuracion",
-    label: "Configuración",
-  },
-];
-
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams();
   const isMobile = useMedia("(max-width: 1024px)", false);
+
+  const routes = [
+    {
+      href: `/${params.clientId}`,
+      label: "Formulario de ingreso",
+    },
+    {
+      href: `/${params.clientId}/proceso`,
+      label: "Vehículos en proceso",
+    },
+    {
+      href: `/${params.clientId}/historial`,
+      label: "Historial de lavados",
+    },
+    {
+      href: `/${params.clientId}/configuracion`,
+      label: "Configuración",
+    },
+  ];
 
   const onClick = (href: string) => {
     router.push(href);

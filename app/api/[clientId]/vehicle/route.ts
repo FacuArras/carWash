@@ -1,18 +1,24 @@
-import { useAuth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(
-    req: Request
+    req: Request,
+    { params }: { params: { clientId: string } }
 ) {
     try {
         const body = await req.json();
+        const { userId }: { userId: string | null } = auth();
         const { vehicle, licensePlate,
             color,
             phoneNumber,
             price,
             typeOfCarWash,
             observations, } = body;
+
+        if (!userId) {
+            return new NextResponse("Unauthenticated", { status: 401 });
+        };
 
         if (!vehicle) {
             return new NextResponse("Vehicle Plate is required", { status: 400 });
@@ -38,6 +44,17 @@ export async function POST(
             return new NextResponse("The type of car wash is required", { status: 400 });
         };
 
+        const clientByUserId = await prismadb.client.findFirst({
+            where: {
+                id: params.clientId,
+                userId
+            }
+        });
+
+        if (!clientByUserId) {
+            return new NextResponse("Unauthorized", { status: 403 });
+        };
+
         const car = await prismadb.vehicle.create({
             data: {
                 vehicle,
@@ -46,7 +63,8 @@ export async function POST(
                 phoneNumber,
                 price,
                 typeOfCarWash,
-                observations
+                observations,
+                clientId: params.clientId
             }
         });
 
