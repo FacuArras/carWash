@@ -24,6 +24,12 @@ export async function POST(
             }
         });
 
+        const config = await prismadb.configuration.create({
+            data: {
+                clientId: client.id
+            }
+        })
+
         return NextResponse.json(client);
     } catch (error: any) {
         console.log("[CLIENT_POST]", error);

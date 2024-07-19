@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Vehicle } from "@prisma/client";
+import { Configuration, Vehicle } from "@prisma/client";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,6 +31,7 @@ import * as z from "zod";
 
 interface VehicleFormProps {
   initialData: Vehicle | null;
+  configurations: Configuration | null;
 }
 
 const formSchema = z.object({
@@ -45,7 +46,10 @@ const formSchema = z.object({
 
 type VehicleFormValues = z.infer<typeof formSchema>;
 
-const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
+const VehicleForm: React.FC<VehicleFormProps> = ({
+  initialData,
+  configurations,
+}) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const params = useParams();
@@ -70,19 +74,12 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
   });
 
   const onSubmit = async (values: VehicleFormValues) => {
-    function capitalizeFirstWord(word: string) {
-      if (word.length === 0) return word;
-
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    }
-
     try {
       setLoading(true);
 
       const valuesToSubmit = {
         ...values,
         licensePlate: values.licensePlate.toUpperCase(),
-        color: capitalizeFirstWord(values.color),
       };
 
       await axios.patch(
@@ -106,8 +103,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
 
       await axios.delete(`/api/vehicleForm/${params.vehicleId}`);
 
-      router.refresh();
       router.push(`/proceso`);
+      router.refresh();
       toast.success("Vehículo eliminado.");
     } catch (error) {
       toast.error("Algo salió mal...");
@@ -154,9 +151,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="auto">auto</SelectItem>
-                      <SelectItem value="moto">moto</SelectItem>
-                      <SelectItem value="camioneta">camioneta</SelectItem>
+                      {configurations!.vehicle.map((vehicle) => (
+                        <SelectItem key={vehicle} value={vehicle}>
+                          {vehicle}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -223,8 +222,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
                       placeholder="5000"
                       value={field.value ?? ""}
                       onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        field.onChange(isNaN(value) ? undefined : value);
+                        const value = e.target.value;
+                        field.onChange(value === "" ? "" : parseFloat(value));
                       }}
                     />
                   </FormControl>
@@ -249,9 +248,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Normal">Normal</SelectItem>
-                      <SelectItem value="Motor">Motor</SelectItem>
-                      <SelectItem value="Detalles">Detalles</SelectItem>
+                      {configurations!.typeOfCarWash.map((typeOfCarWash) => (
+                        <SelectItem key={typeOfCarWash} value={typeOfCarWash}>
+                          {typeOfCarWash}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -281,7 +282,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
               onClick={() => setOpen(true)}
               type="button"
             >
-              Eliminar datos
+              Eliminar vehículo
             </Button>
             <Button type="submit">Modificar datos</Button>
           </div>

@@ -51,13 +51,13 @@ export const StoreModal = () => {
 
   return (
     <Modal
-      title="Crear lavadero"
-      description="¡Creá tu lavadero online ahora!"
+      title="¡Creá tu lavadero online ahora!"
+      description=""
       isOpen={storeModal.isOpen}
       onClose={storeModal.onClose}
     >
       <div>
-        <div className="space-y-4 py-4 pb-4">
+        <div className="space-y-4 pt-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
@@ -65,7 +65,9 @@ export const StoreModal = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre</FormLabel>
+                    <FormLabel className="text-muted-foreground text-sm">
+                      Nombre
+                    </FormLabel>
                     <FormControl>
                       <Input disabled={loading} placeholder="..." {...field} />
                     </FormControl>
@@ -73,13 +75,6 @@ export const StoreModal = () => {
                 )}
               />
               <div className="pt-6 space-x-2 flex items-center justify-end w-full">
-                <Button
-                  disabled={loading}
-                  variant="destructive"
-                  onClick={storeModal.onClose}
-                >
-                  Cancelar
-                </Button>
                 <Button disabled={loading} type="submit">
                   Crear
                 </Button>

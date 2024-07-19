@@ -7,7 +7,6 @@ import { DataTable } from "@/components/ui/data-table";
 
 interface CarClientProps {
   data: CarColumn[];
-  fullData: any;
 }
 
 export const CarClient: React.FC<CarClientProps> = ({ data }) => {

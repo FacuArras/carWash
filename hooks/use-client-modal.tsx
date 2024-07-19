@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
-interface useClientModalStore {
+interface useClientModalProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
 }
 
-export const useClientModal = create<useClientModalStore>((set) => ({
+export const useClientModal = create<useClientModalProps>((set) => ({
   isOpen: false,
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),

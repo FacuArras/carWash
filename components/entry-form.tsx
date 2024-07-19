@@ -24,6 +24,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { Configuration } from "@prisma/client";
 
 const formSchema = z.object({
   vehicle: z.string().min(1),
@@ -35,7 +36,11 @@ const formSchema = z.object({
   observations: z.string().optional(),
 });
 
-const EntryForm = () => {
+interface EntryFormProps {
+  configurations: Configuration;
+}
+
+const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const params = useParams();
@@ -96,9 +101,11 @@ const EntryForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="auto">auto</SelectItem>
-                    <SelectItem value="moto">moto</SelectItem>
-                    <SelectItem value="Camioneta">camioneta</SelectItem>
+                    {configurations.vehicle.map((vehicle) => (
+                      <SelectItem key={vehicle} value={vehicle}>
+                        {vehicle}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormItem>
@@ -191,9 +198,11 @@ const EntryForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Normal">Normal</SelectItem>
-                    <SelectItem value="Motor">Motor</SelectItem>
-                    <SelectItem value="Detalles">Detalles</SelectItem>
+                    {configurations.typeOfCarWash.map((typeOfCarWash) => (
+                      <SelectItem key={typeOfCarWash} value={typeOfCarWash}>
+                        {typeOfCarWash}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormItem>
