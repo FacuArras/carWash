@@ -52,6 +52,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   ): string {
     const reemplazos: { [key: string]: string } = {
       vehículo: datos.vehicle,
+      vehiculo: datos.vehicle,
       color: datos.color,
       patente: datos.licensePlate,
       precio: datos.price,

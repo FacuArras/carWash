@@ -32,8 +32,8 @@ const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
   }));
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 space-y-4 pt-7">
+    <div className="flex-col mt-7 mb-24 md:mb-7">
+      <div className="flex-1 space-y-4">
         <CarClient data={formattedData} />
       </div>
     </div>

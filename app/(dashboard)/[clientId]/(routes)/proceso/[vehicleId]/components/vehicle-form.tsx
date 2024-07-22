@@ -35,12 +35,29 @@ interface VehicleFormProps {
 }
 
 const formSchema = z.object({
-  vehicle: z.string().min(1),
-  licensePlate: z.string().min(1),
-  color: z.string().min(1),
-  phoneNumber: z.string().min(1),
-  price: z.number().min(1),
-  typeOfCarWash: z.string().min(1),
+  vehicle: z.string().min(1, {
+    message: "Vehículo es obligatorio.",
+  }),
+  licensePlate: z.string().min(1, {
+    message: "Patente es obligatoria.",
+  }),
+  color: z.string().min(1, {
+    message: "Color es obligatorio.",
+  }),
+  phoneNumber: z.string().min(1, {
+    message: "Número de teléfono es obligatorio.",
+  }),
+  price: z
+    .number({
+      message: "Precio es obligatorio.",
+    })
+    .min(1, {
+      message: "Precio es obligatorio.",
+    })
+    .positive(),
+  typeOfCarWash: z.string().min(1, {
+    message: "Tipo de lavado es obligatorio.",
+  }),
   observations: z.string().optional(),
 });
 
@@ -264,11 +281,15 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               name="observations"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Observaciones</FormLabel>
+                  <FormLabel>
+                    Observaciones{" "}
+                    <span className="text-muted-foreground text-sm">
+                      (opcional)
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Input disabled={loading} placeholder="..." {...field} />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />

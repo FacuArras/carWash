@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,7 +24,9 @@ interface MessageFormProps {
 }
 
 const formSchema = z.object({
-  message: z.string().min(1),
+  message: z.string().min(1, {
+    message: "Para actualizar el mensaje es necesario escribir uno...",
+  }),
 });
 
 type MessageFormValues = z.infer<typeof formSchema>;
@@ -56,23 +57,6 @@ const MessageForm: React.FC<MessageFormProps> = ({ messageConfiguration }) => {
     }
   };
 
-  const onDelete = async (data: string) => {
-    try {
-      setLoading(true);
-
-      await axios.delete(`/api/${params.clientId}/config`, {
-        data: { vehicle: data },
-      });
-
-      router.refresh();
-      toast.success("Variable eliminada.");
-    } catch (error) {
-      toast.error("Algo salió mal...");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
       <Toaster />
@@ -96,11 +80,16 @@ const MessageForm: React.FC<MessageFormProps> = ({ messageConfiguration }) => {
                   <FormControl>
                     <Textarea
                       disabled={loading}
-                      placeholder={messageConfiguration}
+                      placeholder={
+                        messageConfiguration
+                          ? messageConfiguration
+                          : "Tu 'vehículo' patente 'patente' de color 'color', ya está listo para que lo retires!"
+                      }
                       {...field}
                       className="resize-none"
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />

@@ -33,7 +33,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="my-7">
+    <div className="mt-7 mb-24 md:mb-7">
       <Heading
         title="Formulario de ingreso"
         description="Completá el formulario con los datos del vehículo ingresante."

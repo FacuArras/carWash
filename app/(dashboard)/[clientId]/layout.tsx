@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import MobileHeader from "@/components/mobile-header";
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -28,6 +29,7 @@ const DashboardLayout = async ({ children, params }: DashboardLayoutProps) => {
 
   return (
     <>
+      <MobileHeader />
       <Header />
       <main className="px-3 lg:px-14">{children}</main>
     </>

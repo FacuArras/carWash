@@ -27,12 +27,30 @@ import toast, { Toaster } from "react-hot-toast";
 import { Configuration } from "@prisma/client";
 
 const formSchema = z.object({
-  vehicle: z.string().min(1),
-  licensePlate: z.string().min(1),
-  color: z.string().min(1),
-  phoneNumber: z.number().min(1),
-  price: z.number().min(1),
-  typeOfCarWash: z.string().min(1),
+  vehicle: z.string().min(1, {
+    message: "Vehículo es obligatorio.",
+  }),
+  licensePlate: z.string().min(1, {
+    message: "Patente es obligatoria.",
+  }),
+  color: z.string().min(1, {
+    message: "Color es obligatorio.",
+  }),
+  phoneNumber: z
+    .number()
+    .min(1, {
+      message: "Número de teléfono es obligatorio.",
+    })
+    .positive(),
+  price: z
+    .number()
+    .min(1, {
+      message: "Precio es obligatorio.",
+    })
+    .positive(),
+  typeOfCarWash: z.string().min(1, {
+    message: "Tipo de lavado es obligatorio.",
+  }),
   observations: z.string().optional(),
 });
 
@@ -90,24 +108,25 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Vehículo</FormLabel>
-                <Select
-                  name="vehicle"
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
+                <FormControl>
+                  <Select
+                    name="vehicle"
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccioná el tipo de vehículo a lavar" />
                     </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {configurations.vehicle.map((vehicle) => (
-                      <SelectItem key={vehicle} value={vehicle}>
-                        {vehicle}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                    <SelectContent>
+                      {configurations.vehicle.map((vehicle) => (
+                        <SelectItem key={vehicle} value={vehicle}>
+                          {vehicle}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -124,6 +143,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                     {...field}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -136,6 +156,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                 <FormControl>
                   <Input disabled={loading} placeholder="Rojo" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -157,6 +178,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                     }}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -178,6 +200,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                     }}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -187,24 +210,25 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tipo de lavado</FormLabel>
-                <Select
-                  name="typeOfCarWash"
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
+                <FormControl>
+                  <Select
+                    name="typeOfCarWash"
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccioná el tipo de lavado a realizar" />
                     </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {configurations.typeOfCarWash.map((typeOfCarWash) => (
-                      <SelectItem key={typeOfCarWash} value={typeOfCarWash}>
-                        {typeOfCarWash}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                    <SelectContent>
+                      {configurations.typeOfCarWash.map((typeOfCarWash) => (
+                        <SelectItem key={typeOfCarWash} value={typeOfCarWash}>
+                          {typeOfCarWash}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -213,7 +237,12 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             name="observations"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Observaciones</FormLabel>
+                <FormLabel>
+                  Observaciones{" "}
+                  <span className="text-muted-foreground text-sm">
+                    (opcional)
+                  </span>
+                </FormLabel>
                 <FormControl>
                   <Input disabled={loading} placeholder="..." {...field} />
                 </FormControl>

@@ -27,7 +27,9 @@ interface VehicleFormProps {
 }
 
 const formSchema = z.object({
-  vehicle: z.string().min(1),
+  vehicle: z.string().min(1, {
+    message: "Para crear una variable es necesario escribir una...",
+  }),
 });
 
 type VehicleFormValues = z.infer<typeof formSchema>;
@@ -44,7 +46,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
   });
 
   useEffect(() => {
-    if (vehiclesConfiguration.length === 0) {
+    if (!vehiclesConfiguration) {
       setLoading(true);
     } else {
       setVehicles(vehiclesConfiguration);
@@ -109,11 +111,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
                     <FormControl className="flex-grow">
                       <Input disabled={loading} placeholder="Auto" {...field} />
                     </FormControl>
-                    <FormMessage />
                     <Button type="submit" className="max-w-20">
                       <PlusIcon />
                     </Button>
                   </div>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -131,11 +133,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
                 <Badge
                   variant="secondary"
                   key={vehicle}
-                  className="cursor-pointer h-fit min-w-fit group relative transition-all hover:pl-2 hover:pr-12 hover:py-2 hover:bg-[#004c73] hover:text-white"
+                  className="cursor-pointer h-fit min-w-fit group relative transition-all hover:pl-4 hover:py-2 hover:bg-[#004c73] hover:text-white"
                 >
                   {vehicle}
                   <X
-                    className="hidden absolute top-1.5 right-1.5 group-hover:block"
+                    className="hidden group-hover:block ml-5"
                     width={20}
                     height={20}
                     onClick={() => onDelete(vehicle)}
