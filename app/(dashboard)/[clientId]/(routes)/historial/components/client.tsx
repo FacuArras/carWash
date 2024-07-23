@@ -25,7 +25,18 @@ export const CarClient: React.FC<CarClientProps> = ({ data }) => {
         Total lavados hasta el momento:{" "}
         <span className="font-bold tracking-wider">({data.length})</span>
       </p>
-      <DataTable columns={columns} data={data} searchKey="licensePlate" />
+      <DataTable
+        columns={columns}
+        data={data}
+        searchKeys={[
+          "licensePlate",
+          "brand",
+          "color",
+          "typeOfCarWash",
+          "price",
+          "createdAt",
+        ]}
+      />
     </>
   );
 };

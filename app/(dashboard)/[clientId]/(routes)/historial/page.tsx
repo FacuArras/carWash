@@ -21,9 +21,10 @@ const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
     licensePlate: item.licensePlate,
     color: item.color,
     typeOfCarWash: item.typeOfCarWash,
-    createdAt: format(item.createdAt, "yyyy do MMM, HH:mm", { locale: es }),
+    createdAt: format(item.createdAt, "dd/MM/yy HH:mm'hs'", { locale: es }),
     price: formatter.format(item.price),
     phoneNumber: item.phoneNumber,
+    brand: item.brand,
     observations: item.observations ? item.observations : "Ninguna",
   }));
 

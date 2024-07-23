@@ -23,11 +23,13 @@ const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
     licensePlate: item.licensePlate,
     color: item.color,
     typeOfCarWash: item.typeOfCarWash,
+    brand: item.brand,
     createdAt: formatInTimeZone(
       item.createdAt,
       "America/Argentina/Cordoba",
       "HH:mm"
     ),
+    washed: item.washed,
     observations: item.observations ? item.observations : "Ninguna",
   }));
 

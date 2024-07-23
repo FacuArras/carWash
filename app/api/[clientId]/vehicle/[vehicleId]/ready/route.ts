@@ -30,7 +30,8 @@ export async function PATCH(
                 id: params.vehicleId,
             },
             data: {
-                washed: true
+                washed: true,
+                washedAt: new Date()
             }
         });
 

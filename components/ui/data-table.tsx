@@ -26,15 +26,22 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchKey: string;
+  searchKeys: (keyof TData)[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData>({
   columns,
   data,
-  searchKey,
-}: DataTableProps<TData, TValue>) {
+  searchKeys,
+}: DataTableProps<TData, unknown>) {
+  const [searchTerm, setSearchTerm] = useState("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const globalFilterFn = (row: TData, filterValue: string) => {
+    return searchKeys.some((key) =>
+      String(row[key]).toLowerCase().includes(filterValue.toLowerCase())
+    );
+  };
 
   const table = useReactTable({
     data,
@@ -45,7 +52,10 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
+      globalFilter: searchTerm,
     },
+    globalFilterFn: (row, columnIds, filterValue) =>
+      globalFilterFn(row.original, filterValue),
   });
 
   return (
@@ -53,22 +63,23 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center pb-4">
         <Input
           name="searchTable"
-          placeholder="Buscar por patente..."
-          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(searchKey)?.setFilterValue(event.target.value)
-          }
+          placeholder="Buscar..."
+          value={searchTerm}
+          onChange={(event) => {
+            setSearchTerm(event.target.value);
+            table.setGlobalFilter(event.target.value);
+          }}
           className="max-w-sm"
         />
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-[#3388b4] rounded-md">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-white">
                       {header.isPlaceholder
                         ? null
                         : flexRender(

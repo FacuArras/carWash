@@ -14,6 +14,7 @@ export async function POST(
             phoneNumber,
             price,
             typeOfCarWash,
+            brand,
             observations, } = body;
 
         if (!userId) {
@@ -44,6 +45,10 @@ export async function POST(
             return new NextResponse("The type of car wash is required", { status: 400 });
         };
 
+        if (!brand) {
+            return new NextResponse("Car brand is required", { status: 400 });
+        };
+
         const clientByUserId = await prismadb.client.findFirst({
             where: {
                 id: params.clientId,
@@ -63,6 +68,7 @@ export async function POST(
                 phoneNumber,
                 price,
                 typeOfCarWash,
+                brand,
                 observations,
                 clientId: params.clientId
             }

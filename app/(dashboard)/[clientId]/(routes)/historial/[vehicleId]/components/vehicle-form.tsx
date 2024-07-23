@@ -115,7 +115,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
       toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
-      window.location.href = `/${params.clientId}/proceso`;
+      window.location.href = `/${params.clientId}/historial`;
     }
   };
 
@@ -132,7 +132,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
     } finally {
       setLoading(false);
       setOpen(false);
-      window.location.href = `/${params.clientId}/proceso`;
+      window.location.href = `/${params.clientId}/historial`;
     }
   };
 
@@ -146,9 +146,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
       />
       <div className="pb-2">
         <Heading
-          title={"Modificá el vehículo ingresado"}
+          title={"Detalles del vehículo ya lavado"}
           description={
-            "Si tuviste algún error en el formulario de entrada, corregilo acá!"
+            "Mirá los detalles del vehículo que ya lavaste, si tuviste algún error y querés modificarlo o eliminarlo acá podes hacerlo."
           }
         />
       </div>

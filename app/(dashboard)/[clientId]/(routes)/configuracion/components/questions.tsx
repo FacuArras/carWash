@@ -68,6 +68,12 @@ const Questions = () => {
               <Separator className="my-2 w-4/5 mx-auto" />
               <li>
                 <Dot height={20} width={20} className="text-black inline" />
+                <span className="text-black">'marca' : </span>
+                Representa la marca del vehículo recibido.
+              </li>
+              <Separator className="my-2 w-4/5 mx-auto" />
+              <li>
+                <Dot height={20} width={20} className="text-black inline" />
                 <span className="text-black">'precio' : </span>
                 Representa el precio del lavado.
               </li>

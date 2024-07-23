@@ -25,6 +25,7 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Configuration } from "@prisma/client";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   vehicle: z.string().min(1, {
@@ -51,6 +52,9 @@ const formSchema = z.object({
   typeOfCarWash: z.string().min(1, {
     message: "Tipo de lavado es obligatorio.",
   }),
+  brand: z.string().min(1, {
+    message: "Marca del vehículo es obligatoria.",
+  }),
   observations: z.string().optional(),
 });
 
@@ -72,6 +76,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
       phoneNumber: undefined,
       price: undefined,
       typeOfCarWash: "",
+      brand: "",
       observations: "",
     },
   });
@@ -107,14 +112,14 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             name="vehicle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Vehículo</FormLabel>
+                <FormLabel htmlFor="vehicle">Vehículo</FormLabel>
                 <FormControl>
                   <Select
                     name="vehicle"
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger id="vehicle">
                       <SelectValue placeholder="Seleccioná el tipo de vehículo a lavar" />
                     </SelectTrigger>
                     <SelectContent>
@@ -184,6 +189,23 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
           />
           <FormField
             control={form.control}
+            name="brand"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Marca del vehículo</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={loading}
+                    placeholder="Volkswagen"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="price"
             render={({ field }) => (
               <FormItem className="w-full">
@@ -209,14 +231,14 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             name="typeOfCarWash"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tipo de lavado</FormLabel>
+                <FormLabel htmlFor="typeOfCarWash">Tipo de lavado</FormLabel>
                 <FormControl>
                   <Select
                     name="typeOfCarWash"
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger id="typeOfCarWash">
                       <SelectValue placeholder="Seleccioná el tipo de lavado a realizar" />
                     </SelectTrigger>
                     <SelectContent>
@@ -244,7 +266,12 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                   </span>
                 </FormLabel>
                 <FormControl>
-                  <Input disabled={loading} placeholder="..." {...field} />
+                  <Textarea
+                    disabled={loading}
+                    placeholder={"..."}
+                    {...field}
+                    className="resize-none"
+                  />
                 </FormControl>
               </FormItem>
             )}
