@@ -4,6 +4,7 @@ import { sendMessage } from "@/actions/send-message";
 import { useParams, useRouter } from "next/navigation";
 import { CellAction } from "./cell-action";
 import toast from "react-hot-toast";
+import { useState, useEffect } from "react";
 
 export type CarColumn = {
   id: string;
@@ -17,6 +18,50 @@ export type CarColumn = {
   createdAt: string;
   observations: string;
   washed: boolean;
+};
+
+const WashCheckbox = ({ row }: { row: any }) => {
+  const params = useParams();
+  const router = useRouter();
+
+  const handleChange = async (value: boolean) => {
+    if (value) {
+      const data = {
+        id: row.original.id,
+        vehicle: row.original.vehicle,
+        color: row.original.color,
+        licensePlate: row.original.licensePlate,
+        price: row.original.price,
+        typeOfCarWash: row.original.typeOfCarWash,
+        createdAt: row.original.createdAt,
+        brand: row.original.brand,
+        phoneNumber: row.original.phoneNumber,
+      };
+
+      const clientId = Array.isArray(params.clientId)
+        ? params.clientId[0]
+        : params.clientId;
+
+      if (clientId) {
+        await sendMessage(data, clientId);
+
+        toast.success("Vehículo lavado!");
+
+        router.refresh();
+      }
+    }
+  };
+
+  return (
+    <div className="pr-4">
+      <Checkbox
+        checked={false}
+        onCheckedChange={handleChange}
+        aria-label="Lavado"
+        className="lg:hover:bg-[#3388b4]"
+      />
+    </div>
+  );
 };
 
 export const columns: ColumnDef<CarColumn>[] = [
@@ -51,47 +96,7 @@ export const columns: ColumnDef<CarColumn>[] = [
   {
     accessorKey: "washed",
     header: "¿Lavado?",
-    cell: ({ row }) => {
-      const params = useParams();
-      const router = useRouter();
-      const handleChange = async (value: boolean) => {
-        if (value) {
-          const data = {
-            id: row.original.id,
-            vehicle: row.original.vehicle,
-            color: row.original.color,
-            licensePlate: row.original.licensePlate,
-            price: row.original.price,
-            typeOfCarWash: row.original.typeOfCarWash,
-            createdAt: row.original.createdAt,
-            brand: row.original.brand,
-            phoneNumber: row.original.phoneNumber,
-          };
-
-          const clientId = Array.isArray(params.clientId)
-            ? params.clientId[0]
-            : params.clientId;
-
-          if (clientId) {
-            await sendMessage(data, clientId);
-
-            toast.success("Vehículo lavado!");
-
-            router.refresh();
-          }
-        }
-      };
-
-      return (
-        <div className="pr-4">
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={handleChange}
-            aria-label="Lavado"
-          />
-        </div>
-      );
-    },
+    cell: ({ row }) => <WashCheckbox row={row} />,
   },
   {
     id: "actions",
