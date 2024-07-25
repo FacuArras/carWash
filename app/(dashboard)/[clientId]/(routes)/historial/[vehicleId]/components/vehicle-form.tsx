@@ -24,6 +24,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Configuration, Vehicle } from "@prisma/client";
 import axios from "axios";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -136,6 +138,28 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
     }
   };
 
+  const isDifferenceMoreThan10Minutes = (
+    createdAt: Date | null,
+    updatedAt: Date | null
+  ) => {
+    const differenceInMillis = Math.abs(
+      createdAt!.getTime() - updatedAt!.getTime()
+    );
+    const differenceInMinutes = differenceInMillis / (1000 * 60);
+    return differenceInMinutes >= 10;
+  };
+
+  const isDifferenceMoreThan1Minute = (
+    createdAt: Date | null,
+    updatedAt: Date | null
+  ) => {
+    const differenceInMillis = Math.abs(
+      createdAt!.getTime() - updatedAt!.getTime()
+    );
+    const differenceInMinutes = differenceInMillis / (1000 * 60);
+    return differenceInMinutes >= 1;
+  };
+
   return (
     <>
       <AlertModal
@@ -156,6 +180,71 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 px-3 pt-2 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
+            <div>
+              <p className="font-semibold block text-md text-[#000f17]">
+                Ingreso
+                <span className="text-muted-foreground text-sm">
+                  {" "}
+                  (no modificable)
+                </span>
+              </p>
+              <p className="mt-2 h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
+                {initialData!.createdAt &&
+                  format(
+                    new Date(initialData!.createdAt),
+                    "dd/MM/yy 'a las ' HH:mm'hs'",
+                    {
+                      locale: es,
+                    }
+                  )}
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold block text-md text-[#000f17]">
+                Egreso
+                <span className="text-muted-foreground text-sm">
+                  {" "}
+                  (no modificable)
+                </span>
+              </p>
+              <p className="mt-2 h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
+                {initialData!.washedAt &&
+                  format(
+                    new Date(initialData!.washedAt),
+                    "dd/MM/yy 'a las ' HH:mm'hs'",
+                    {
+                      locale: es,
+                    }
+                  )}
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold block text-md text-[#000f17]">
+                ¿Este vehículo fue modificado?
+                <span className="text-muted-foreground text-sm">
+                  {" "}
+                  (no modificable)
+                </span>
+              </p>
+              <p className="mt-2 min-h-10 h-fit w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
+                {initialData &&
+                isDifferenceMoreThan10Minutes(
+                  initialData.createdAt,
+                  initialData.updatedAt
+                )
+                  ? isDifferenceMoreThan1Minute(
+                      initialData!.updatedAt,
+                      initialData!.washedAt
+                    )
+                    ? `Sí, fue modificado el ${format(
+                        new Date(initialData!.updatedAt),
+                        "dd/MM/yy 'a las ' HH:mm'hs'",
+                        { locale: es }
+                      )}`
+                    : "No"
+                  : "No"}
+              </p>
+            </div>
             <FormField
               control={form.control}
               name="vehicle"

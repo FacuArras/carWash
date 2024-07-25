@@ -3,8 +3,15 @@
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { Bolt, ClipboardPenLine, Droplets, History } from "lucide-react";
+import {
+  Bolt,
+  ClipboardPenLine,
+  Droplets,
+  History,
+  Loader2,
+} from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
+import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 
 const MobileHeader = () => {
   const params = useParams();
@@ -68,6 +75,21 @@ const MobileHeader = () => {
           <Bolt />
         </Link>
       </Button>
+      <ClerkLoaded>
+        <UserButton
+          afterSignOutUrl="/"
+          appearance={{
+            elements: {
+              userButtonAvatarBox: {
+                fontSize: 20,
+              },
+            },
+          }}
+        />
+      </ClerkLoaded>
+      <ClerkLoading>
+        <Loader2 className="size-8 animate-spin text-slate-400" />
+      </ClerkLoading>
     </header>
   );
 };

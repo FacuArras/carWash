@@ -1,6 +1,5 @@
 import prismadb from "@/lib/prismadb";
 import VehicleForm from "./components/vehicle-form";
-import getConfigurations from "@/hooks/get-configurations";
 
 const VehiclePage = async ({
   params,
@@ -18,17 +17,6 @@ const VehiclePage = async ({
       clientId: params.clientId,
     },
   });
-
-  async function getConfigs() {
-    const clientId = Array.isArray(params.clientId)
-      ? params.clientId[0]
-      : params.clientId;
-
-    const configs = await getConfigurations(clientId);
-    return configs;
-  }
-
-  getConfigs();
 
   return (
     <div className="flex-col mt-7 mb-24 md:mb-7">

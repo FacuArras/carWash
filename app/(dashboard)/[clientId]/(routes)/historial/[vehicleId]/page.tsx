@@ -19,17 +19,6 @@ const VehiclePage = async ({
     },
   });
 
-  async function getConfigs() {
-    const clientId = Array.isArray(params.clientId)
-      ? params.clientId[0]
-      : params.clientId;
-
-    const configs = await getConfigurations(clientId);
-    return configs;
-  }
-
-  getConfigs();
-
   return (
     <div className="flex-col mt-7 mb-24 md:mb-7">
       <div className="flex-1 space-y-4">

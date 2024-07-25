@@ -30,7 +30,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+          <DropdownMenuLabel className="mb-1">Acciones</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() =>
               router.push(`/${params.clientId}/historial/${data.id}`)

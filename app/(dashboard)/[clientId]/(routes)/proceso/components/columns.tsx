@@ -4,7 +4,7 @@ import { sendMessage } from "@/actions/send-message";
 import { useParams, useRouter } from "next/navigation";
 import { CellAction } from "./cell-action";
 import toast from "react-hot-toast";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export type CarColumn = {
   id: string;
@@ -23,8 +23,11 @@ export type CarColumn = {
 const WashCheckbox = ({ row }: { row: any }) => {
   const params = useParams();
   const router = useRouter();
+  const [checked, setChecked] = useState(false);
 
   const handleChange = async (value: boolean) => {
+    setChecked(true);
+
     if (value) {
       const data = {
         id: row.original.id,
@@ -47,6 +50,7 @@ const WashCheckbox = ({ row }: { row: any }) => {
 
         toast.success("Vehículo lavado!");
 
+        setChecked(false);
         router.refresh();
       }
     }
@@ -55,10 +59,9 @@ const WashCheckbox = ({ row }: { row: any }) => {
   return (
     <div className="pr-4">
       <Checkbox
-        checked={false}
+        checked={checked}
         onCheckedChange={handleChange}
         aria-label="Lavado"
-        className="lg:hover:bg-[#3388b4]"
       />
     </div>
   );
