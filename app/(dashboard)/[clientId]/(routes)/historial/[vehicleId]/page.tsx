@@ -1,6 +1,5 @@
 import prismadb from "@/lib/prismadb";
 import VehicleForm from "./components/vehicle-form";
-import getConfigurations from "@/hooks/get-configurations";
 
 const VehiclePage = async ({
   params,
@@ -22,7 +21,7 @@ const VehiclePage = async ({
   return (
     <div className="flex-col mt-7 mb-24 md:mb-7">
       <div className="flex-1 space-y-4">
-        <VehicleForm initialData={vehicle} configurations={configs} />
+        <VehicleForm initialData={vehicle} />
       </div>
     </div>
   );

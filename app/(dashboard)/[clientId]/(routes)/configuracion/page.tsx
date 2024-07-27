@@ -5,6 +5,7 @@ import TypesForm from "./components/type-form";
 import MessageForm from "./components/message-form";
 import Questions from "./components/questions";
 import prismadb from "@/lib/prismadb";
+import { Button } from "@/components/ui/button";
 
 const Configuracion = async ({ params }: { params: { clientId: string } }) => {
   const configs = await prismadb.configuration.findUnique({

@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,7 +21,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const formSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1, {
+    message: "Para crear tu lavadero necesitamos un nombre.",
+  }),
 });
 
 export const StoreModal = () => {
@@ -56,33 +59,31 @@ export const StoreModal = () => {
       isOpen={storeModal.isOpen}
       onClose={storeModal.onClose}
     >
-      <div>
-        <div className="space-y-4 pt-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground text-sm">
-                      Nombre
-                    </FormLabel>
-                    <FormControl>
-                      <Input disabled={loading} placeholder="..." {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <div className="pt-6 space-x-2 flex items-center justify-end w-full">
-                <Button disabled={loading} type="submit">
-                  Crear
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
-      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="space-y-0">
+                <FormLabel className="mb-1">Nombre</FormLabel>
+                <FormDescription className="pb-2">
+                  Con este nombre distinguiremos tu lavadero.
+                </FormDescription>
+                <FormControl>
+                  <Input disabled={loading} placeholder="CarWash" {...field} />
+                </FormControl>
+                <FormMessage className="pt-4" />
+              </FormItem>
+            )}
+          />
+          <div className="space-x-2 flex items-center justify-end w-full">
+            <Button disabled={loading} type="submit">
+              ¡Crear lavadero!
+            </Button>
+          </div>
+        </form>
+      </Form>
     </Modal>
   );
 };
