@@ -106,6 +106,17 @@ const Questions = () => {
             tu bolsillo.
           </AccordionContent>
         </AccordionItem>
+
+        <AccordionItem value="item-4">
+          <AccordionTrigger className="text-sm text-start">
+            ¿Qué hago si olvidé mi contraseña?
+          </AccordionTrigger>
+
+          <AccordionContent className="text-sm text-muted-foreground mt-0.5">
+            Si olvidaste tu contraseña deberías de contactar con soporte para
+            poder reestablecerla.
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     </div>
   );

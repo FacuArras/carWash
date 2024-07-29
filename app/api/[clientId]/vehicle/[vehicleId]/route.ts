@@ -61,20 +61,44 @@ export async function PATCH(
             return new NextResponse("Unauthorized", { status: 403 });
         };
 
-        const vehicleUpdated = await prismadb.vehicle.updateMany({
+        const currentVehicle = await prismadb.vehicle.findUnique({
+            where: {
+                id: params.vehicleId
+            }
+        });
+
+        if (!currentVehicle) {
+            return new NextResponse("Vehicle not found", { status: 404 });
+        }
+
+        const updatedValues: Record<string, any> = {};
+        if (currentVehicle.vehicle !== vehicle) updatedValues.vehicle = vehicle;
+        if (currentVehicle.licensePlate !== licensePlate) updatedValues.licensePlate = licensePlate;
+        if (currentVehicle.color !== color) updatedValues.color = color;
+        if (currentVehicle.phoneNumber !== phoneNumber) updatedValues.phoneNumber = phoneNumber;
+        if (currentVehicle.price !== price) updatedValues.price = price;
+        if (currentVehicle.typeOfCarWash !== typeOfCarWash) updatedValues.typeOfCarWash = typeOfCarWash;
+        if (currentVehicle.brand !== brand) updatedValues.brand = brand;
+        if (currentVehicle.observations !== observations) updatedValues.observations = observations;
+
+        const dataToUpdate = {
+            vehicle,
+            licensePlate,
+            color,
+            phoneNumber,
+            price,
+            typeOfCarWash,
+            brand,
+            observations,
+            clientId: params.clientId,
+            ...(currentVehicle.washed && { updatedValue: updatedValues }),
+        };
+
+        const vehicleUpdated = await prismadb.vehicle.update({
             where: {
                 id: params.vehicleId,
             },
-            data: {
-                vehicle, licensePlate,
-                color,
-                phoneNumber,
-                price,
-                typeOfCarWash,
-                brand,
-                observations,
-                clientId: params.clientId
-            }
+            data: dataToUpdate,
         });
 
         return NextResponse.json(vehicleUpdated);

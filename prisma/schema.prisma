@@ -10,6 +10,7 @@ datasource db {
 model Client {
   id            String         @id @default(uuid()) @map("_id")
   name          String
+  password      String
   userId        String
   createdAt     DateTime       @default(now())
   vehicles      Vehicle[]      @relation("ClientToVehicle")
@@ -30,6 +31,7 @@ model Vehicle {
   createdAt     DateTime  @default(now())
   washedAt      DateTime?
   updatedAt     DateTime  @updatedAt
+  updatedValue  Json?
   client        Client    @relation("ClientToVehicle", fields: [clientId], references: [id])
   clientId      String
 
