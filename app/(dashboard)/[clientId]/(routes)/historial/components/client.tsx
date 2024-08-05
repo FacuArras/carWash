@@ -16,12 +16,7 @@ export const CarClient: React.FC<CarClientProps> = ({ data }) => {
   const params = useParams();
 
   return (
-    <>
-      <Heading
-        title={`Historial de vehículos lavados`}
-        description="Administra los vehículos que ya terminaron su proceso de lavado."
-      />
-      <Separator className="my-6" />
+    <div className="px-3 lg:px-14">
       <p className="text-md my-4">
         Total lavados hasta el momento:{" "}
         <span className="font-bold tracking-wider">({data.length})</span>
@@ -38,6 +33,6 @@ export const CarClient: React.FC<CarClientProps> = ({ data }) => {
           "createdAt",
         ]}
       />
-    </>
+    </div>
   );
 };

@@ -171,28 +171,6 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
     setIsNotEditable(false);
   };
 
-  const isDifferenceMoreThan10Minutes = (
-    createdAt: Date | null,
-    updatedAt: Date | null
-  ) => {
-    const differenceInMillis = Math.abs(
-      createdAt!.getTime() - updatedAt!.getTime()
-    );
-    const differenceInMinutes = differenceInMillis / (1000 * 60);
-    return differenceInMinutes >= 10;
-  };
-
-  const isDifferenceMoreThan1Minute = (
-    createdAt: Date | null,
-    updatedAt: Date | null
-  ) => {
-    const differenceInMillis = Math.abs(
-      createdAt!.getTime() - updatedAt!.getTime()
-    );
-    const differenceInMinutes = differenceInMillis / (1000 * 60);
-    return differenceInMinutes >= 1;
-  };
-
   const mapFieldName = (fieldName: string): string => {
     switch (fieldName) {
       case "price":
@@ -228,23 +206,14 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
         onConfirm={onPasswordConfirmation}
         loading={loading}
       />
-      <div className="pb-2">
-        <Heading
-          title={"Detalles del vehículo ya lavado"}
-          description={
-            "Mirá los detalles del vehículo que ya lavaste, si tuviste algún error y querés modificarlo o eliminarlo acá podés hacerlo."
-          }
-        />
-      </div>
-      <Separator />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 px-3 pt-2 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
+          <div className="grid grid-cols-1 px-3 pt-2 md:grid-cols-2 lg:px-14 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
             <div>
               <p className="font-semibold block text-md text-[#000f17]">
                 Ingreso
               </p>
-              <p className="mt-2 h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
+              <p className="mt-2 h-10 w-full rounded-md border border-input px-3 py-2 text-md ring-offset-background">
                 {initialData!.createdAt &&
                   format(
                     new Date(initialData!.createdAt),
@@ -259,7 +228,7 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
               <p className="font-semibold block text-md text-[#000f17]">
                 Egreso
               </p>
-              <p className="mt-2 h-10 w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
+              <p className="mt-2 h-10 w-full rounded-md border border-input px-3 py-2 text-md ring-offset-background">
                 {initialData!.washedAt &&
                   format(
                     new Date(initialData!.washedAt),
@@ -274,7 +243,7 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
               <p className="font-semibold block text-md text-[#000f17]">
                 ¿Este vehículo fue modificado?
               </p>
-              <p className="mt-2 min-h-10 h-fit w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background">
+              <p className="mt-2 min-h-10 h-fit w-full rounded-md border border-input px-3 py-2 text-md ring-offset-background">
                 {initialData && initialData.updatedValue
                   ? `Sí, fue modificado el 
                 ${format(
@@ -456,7 +425,7 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
                 <FormItem>
                   <FormLabel>
                     Observaciones{" "}
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-muted-foreground text-md">
                       (opcional)
                     </span>
                   </FormLabel>
@@ -474,7 +443,7 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
             />
           </div>
           {isNotEditable ? (
-            <div className="flex justify-end">
+            <div className="flex justify-end mr-3 lg:mr-14">
               <Button
                 type="button"
                 onClick={() => setIsPasswordModalOpen(true)}
@@ -483,7 +452,7 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
               </Button>
             </div>
           ) : (
-            <div className="flex justify-end px-3 gap-x-3">
+            <div className="flex justify-end gap-x-3 mr-3 lg:mr-14">
               <Button
                 variant="destructive"
                 type="button"

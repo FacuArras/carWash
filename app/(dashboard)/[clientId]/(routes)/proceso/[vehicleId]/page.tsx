@@ -1,5 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import VehicleForm from "./components/vehicle-form";
+import { Heading } from "@/components/ui/heading";
+import Bubbles from "@/components/bubbles";
 
 const VehiclePage = async ({
   params,
@@ -19,10 +21,15 @@ const VehiclePage = async ({
   });
 
   return (
-    <div className="flex-col mt-7 mb-24 md:mb-7">
-      <div className="flex-1 space-y-4">
-        <VehicleForm initialData={vehicle} configurations={configs} />
+    <div className="mb-24 md:mb-7">
+      <div className="canvas py-7 mb-7 px-3 lg:px-14 shadow">
+        <Bubbles />
+        <Heading
+          title="Vehículos en proceso"
+          description="Administra los vehículos que están en proceso de lavado."
+        />
       </div>
+      <VehicleForm initialData={vehicle} configurations={configs} />
     </div>
   );
 };

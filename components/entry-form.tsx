@@ -105,7 +105,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="px-3 lg:px-14">
         <div className="grid grid-cols-1 px-3 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
           <FormField
             control={form.control}

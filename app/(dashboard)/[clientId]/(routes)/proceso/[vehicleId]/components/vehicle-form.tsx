@@ -96,6 +96,19 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
   });
 
   const onSubmit = async (values: VehicleFormValues) => {
+    const hasChanges = Object.keys(values).some(
+      (key) =>
+        values[key as keyof VehicleFormValues] !==
+        initialData?.[key as keyof VehicleFormValues]
+    );
+
+    if (!hasChanges) {
+      toast.error(
+        "Para modificar los datos tenés que modificar mínimo 1 campo."
+      );
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -144,18 +157,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
         onConfirm={onDelete}
         loading={loading}
       />
-      <div className="pb-2">
-        <Heading
-          title={"Modificá el vehículo ingresado"}
-          description={
-            "Si tuviste algún error en el formulario de entrada, corregilo acá!"
-          }
-        />
-      </div>
-      <Separator />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 px-3 pt-2 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
+          <div className="grid grid-cols-1 px-3 lg:px-14 pt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
             <FormField
               control={form.control}
               name="vehicle"
@@ -321,7 +325,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               )}
             />
           </div>
-          <div className="flex justify-end gap-x-3 mr-3">
+          <div className="flex justify-end gap-x-3 mr-3 lg:mr-14">
             <Button
               disabled={loading}
               variant="destructive"

@@ -10,15 +10,15 @@ import { Dot } from "lucide-react";
 const Questions = () => {
   return (
     <div>
-      <h3 className="font-semibold block text-md text-[#000f17]">
+      <h3 className="font-semibold block text-lg text-[#000f17]">
         Preguntas frecuentes
       </h3>
       <Accordion type="single" collapsible className="mt-2">
         <AccordionItem value="item-0">
-          <AccordionTrigger className="text-sm">
+          <AccordionTrigger className="text-md">
             ¿Qué es una variable?
           </AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground mt-0.5">
+          <AccordionContent className="text-md text-muted-foreground mt-0.5">
             <p className="m-0">
               Una variable es como una caja con una etiqueta en la que podés
               guardar algo para usarlo después. Por ejemplo la variable
@@ -30,10 +30,10 @@ const Questions = () => {
         </AccordionItem>
 
         <AccordionItem value="item-1">
-          <AccordionTrigger className="text-sm text-start">
+          <AccordionTrigger className="text-md text-start">
             ¿Cómo sería el resultado del mensaje predeterminado?
           </AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground mt-0.5">
+          <AccordionContent className="text-md text-muted-foreground mt-0.5">
             <p className="m-0">
               Tu auto patente "ABC-123" de color blanco, ya está listo para que
               lo retires!
@@ -42,10 +42,10 @@ const Questions = () => {
         </AccordionItem>
 
         <AccordionItem value="item-2">
-          <AccordionTrigger className="text-sm">
+          <AccordionTrigger className="text-md">
             ¿Qué variables puedo poner?
           </AccordionTrigger>
-          <AccordionContent className="text-sm text-muted-foreground mt-0.5">
+          <AccordionContent className="text-md text-muted-foreground mt-0.5">
             <ul>
               <li>
                 <Dot height={20} width={20} className="text-black inline" />
@@ -94,11 +94,11 @@ const Questions = () => {
         </AccordionItem>
 
         <AccordionItem value="item-3">
-          <AccordionTrigger className="text-sm text-start">
+          <AccordionTrigger className="text-md text-start">
             ¿Por qué los mensajes no son 100% automáticos?
           </AccordionTrigger>
 
-          <AccordionContent className="text-sm text-muted-foreground mt-0.5">
+          <AccordionContent className="text-md text-muted-foreground mt-0.5">
             Porque cada conversación nueva en Whatsapp de manera 100% automática
             cuesta $0.06 dólares, equivalentes, junto a impuestos, a
             aproximádamente $120 pesos. Lo que, promediando los gastos, al mes
@@ -108,11 +108,11 @@ const Questions = () => {
         </AccordionItem>
 
         <AccordionItem value="item-4">
-          <AccordionTrigger className="text-sm text-start">
+          <AccordionTrigger className="text-md text-start">
             ¿Qué hago si olvidé mi contraseña?
           </AccordionTrigger>
 
-          <AccordionContent className="text-sm text-muted-foreground mt-0.5">
+          <AccordionContent className="text-md text-muted-foreground mt-0.5">
             Si olvidaste tu contraseña deberías de contactar con soporte para
             poder reestablecerla.
           </AccordionContent>
