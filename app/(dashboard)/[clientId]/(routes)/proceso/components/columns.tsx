@@ -46,9 +46,11 @@ const WashCheckbox = ({ row }: { row: any }) => {
         : params.clientId;
 
       if (clientId) {
-        await sendMessage(data, clientId);
-
-        toast.success("Vehículo lavado!");
+        await toast.promise(sendMessage(data, clientId), {
+          loading: "Enviando...",
+          success: <b>Mensaje enviado!</b>,
+          error: <b>Algo salió mal...</b>,
+        });
 
         setChecked(false);
         router.refresh();

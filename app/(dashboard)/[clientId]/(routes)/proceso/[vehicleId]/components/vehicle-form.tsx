@@ -10,7 +10,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -19,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Configuration, Vehicle } from "@prisma/client";
@@ -27,7 +25,7 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import * as z from "zod";
 
 interface VehicleFormProps {
@@ -117,15 +115,19 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
         licensePlate: values.licensePlate.toUpperCase(),
       };
 
-      await axios.patch(
-        `/api/${params.clientId}/vehicle/${params.vehicleId}`,
-        valuesToSubmit
+      await toast.promise(
+        axios.patch(
+          `/api/${params.clientId}/vehicle/${params.vehicleId}`,
+          valuesToSubmit
+        ),
+        {
+          loading: "Modificando...",
+          success: <b>Vehículo modificado!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
       );
-
-      toast.success("Vehículo actualizado!");
     } catch (error) {
       router.refresh();
-      toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
       window.location.href = `/${params.clientId}/proceso`;
@@ -136,12 +138,16 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
     try {
       setLoading(true);
 
-      await axios.delete(`/api/${params.clientId}/vehicle/${params.vehicleId}`);
-
-      toast.success("Vehículo eliminado.");
+      await toast.promise(
+        axios.delete(`/api/${params.clientId}/vehicle/${params.vehicleId}`),
+        {
+          loading: "Eliminando...",
+          success: <b>Vehículo eliminado!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
+      );
     } catch (error) {
       router.refresh();
-      toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
       setOpen(false);
@@ -340,7 +346,6 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
           </div>
         </form>
       </Form>
-      <Toaster />
     </>
   );
 };

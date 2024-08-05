@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 
 const Header = () => {
   return (
-    <header className="hidden md:block bg-gradient-to-r from-[#006aa1] via-[#005b8a] to-[#004c73] pr-3 py-4 lg:py-6 lg:px-14 rounded-bl-md rounded-br-md sticky top-0 z-50">
+    <header className="hidden md:block bg-gradient-to-r from-[#006aa1] to-[#004c73] pr-3 py-4 lg:py-6 lg:px-14 rounded-bl-md rounded-br-md sticky top-0 z-50">
       <div className="w-full flex items-center justify-between flex-row">
         <div className="flex items-center gap-x-5 lg:gap-x-16">
           <HeaderLogo />

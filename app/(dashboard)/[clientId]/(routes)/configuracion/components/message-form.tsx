@@ -45,13 +45,18 @@ const MessageForm: React.FC<MessageFormProps> = ({ messageConfiguration }) => {
     try {
       setLoading(true);
 
-      await axios.patch(`/api/${params.clientId}/config`, values);
+      await toast.promise(
+        axios.patch(`/api/${params.clientId}/config`, values),
+        {
+          loading: "Actualizando mensaje...",
+          success: <b>Mensaje actualizado!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
+      );
 
-      toast.success("Mensaje actualizado!");
       location.reload();
     } catch (error) {
       router.refresh();
-      toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
     }
@@ -59,7 +64,6 @@ const MessageForm: React.FC<MessageFormProps> = ({ messageConfiguration }) => {
 
   return (
     <>
-      <Toaster />
       <div className="flex flex-col gap-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

@@ -23,7 +23,7 @@ import {
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Configuration } from "@prisma/client";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -91,198 +91,205 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
         phoneNumber: values.phoneNumber.toString(),
       };
 
-      await axios.post(`/api/${params.clientId}/vehicle`, valuesToSubmit);
+      await toast.promise(
+        axios.post(`/api/${params.clientId}/vehicle`, valuesToSubmit),
+        {
+          loading: "Creando...",
+          success: <b>Vehículo registrado!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
+      );
 
-      router.push(`/${params.clientId}/proceso`);
-      router.refresh();
-      toast.success("Vehículo registrado!");
-    } catch (error) {
-      toast.error("Algo salió mal...");
+      setTimeout(() => {
+        router.push(`/${params.clientId}/proceso`);
+        router.refresh();
+      }, 2000);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="px-3 lg:px-14">
-        <div className="grid grid-cols-1 px-3 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
-          <FormField
-            control={form.control}
-            name="vehicle"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="vehicle">Vehículo</FormLabel>
-                <FormControl>
-                  <Select
-                    name="vehicle"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger id="vehicle">
-                      <SelectValue placeholder="Seleccioná el tipo de vehículo a lavar" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {configurations.vehicle.map((vehicle) => (
-                        <SelectItem key={vehicle} value={vehicle}>
-                          {vehicle}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="licensePlate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Patente</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={loading}
-                    placeholder="Patente del vehículo"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="color"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Color</FormLabel>
-                <FormControl>
-                  <Input disabled={loading} placeholder="Rojo" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="phoneNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Teléfono</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    disabled={loading}
-                    placeholder="3517895215"
-                    value={field.value ?? ""}
-                    onChange={(e) => {
-                      const value = parseFloat(e.target.value);
-                      field.onChange(isNaN(value) ? undefined : value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="brand"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Marca del vehículo</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={loading}
-                    placeholder="Volkswagen"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Precio</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    disabled={loading}
-                    placeholder="5000"
-                    value={field.value ?? ""}
-                    onChange={(e) => {
-                      const value = parseFloat(e.target.value);
-                      field.onChange(isNaN(value) ? undefined : value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="typeOfCarWash"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="typeOfCarWash">Tipo de lavado</FormLabel>
-                <FormControl>
-                  <Select
-                    name="typeOfCarWash"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger id="typeOfCarWash">
-                      <SelectValue placeholder="Seleccioná el tipo de lavado a realizar" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {configurations.typeOfCarWash.map((typeOfCarWash) => (
-                        <SelectItem key={typeOfCarWash} value={typeOfCarWash}>
-                          {typeOfCarWash}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="observations"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Observaciones{" "}
-                  <span className="text-muted-foreground text-sm">
-                    (opcional)
-                  </span>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    disabled={loading}
-                    placeholder={"..."}
-                    {...field}
-                    className="resize-none"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
-        <Button type="submit" className="ml-auto mr-3 block">
-          Ingresar datos
-        </Button>
-        <Toaster />
-      </form>
-    </Form>
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="px-3 lg:px-14">
+          <div className="grid grid-cols-1 px-3 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
+            <FormField
+              control={form.control}
+              name="vehicle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="vehicle">Vehículo</FormLabel>
+                  <FormControl>
+                    <Select
+                      name="vehicle"
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger id="vehicle">
+                        <SelectValue placeholder="Seleccioná el tipo de vehículo a lavar" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {configurations.vehicle.map((vehicle) => (
+                          <SelectItem key={vehicle} value={vehicle}>
+                            {vehicle}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="licensePlate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Patente</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Patente del vehículo"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Rojo" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Teléfono</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="3517895215"
+                      value={field.value ?? ""}
+                      onChange={(e) => {
+                        const value = parseFloat(e.target.value);
+                        field.onChange(isNaN(value) ? undefined : value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Marca del vehículo</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Volkswagen"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Precio</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="5000"
+                      value={field.value ?? ""}
+                      onChange={(e) => {
+                        const value = parseFloat(e.target.value);
+                        field.onChange(isNaN(value) ? undefined : value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="typeOfCarWash"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="typeOfCarWash">Tipo de lavado</FormLabel>
+                  <FormControl>
+                    <Select
+                      name="typeOfCarWash"
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger id="typeOfCarWash">
+                        <SelectValue placeholder="Seleccioná el tipo de lavado a realizar" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {configurations.typeOfCarWash.map((typeOfCarWash) => (
+                          <SelectItem key={typeOfCarWash} value={typeOfCarWash}>
+                            {typeOfCarWash}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="observations"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Observaciones{" "}
+                    <span className="text-muted-foreground text-sm">
+                      (opcional)
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      disabled={loading}
+                      placeholder={"..."}
+                      {...field}
+                      className="resize-none"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button type="submit" className="ml-auto mr-3 block">
+            Ingresar datos
+          </Button>
+        </form>
+      </Form>
+    </>
   );
 };
 

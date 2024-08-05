@@ -18,7 +18,7 @@ import { PlusIcon, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import * as z from "zod";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -58,14 +58,18 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
     try {
       setLoading(true);
 
-      await axios.patch(`/api/${params.clientId}/config`, values);
-
       setVehicles((prevVehicles) => [...prevVehicles, values.vehicle]);
 
-      toast.success("Variable creada!");
+      await toast.promise(
+        axios.patch(`/api/${params.clientId}/config`, values),
+        {
+          loading: "Creando variable...",
+          success: <b>Variable creada!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
+      );
     } catch (error) {
       router.refresh();
-      toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
     }
@@ -75,18 +79,24 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
     try {
       setLoading(true);
 
-      await axios.delete(`/api/${params.clientId}/config`, {
-        data: { vehicle: data },
-      });
-
       setVehicles((prevVehicles) =>
         prevVehicles.filter((vehicle) => vehicle !== data)
       );
 
+      await toast.promise(
+        axios.delete(`/api/${params.clientId}/config`, {
+          data: { vehicle: data },
+        }),
+        {
+          loading: "Eliminando variable...",
+          success: <b>Variable Eliminada!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
+      );
+
       router.refresh();
-      toast.success("Variable eliminada.");
     } catch (error) {
-      toast.error("Algo salió mal...");
+      router.refresh();
     } finally {
       setLoading(false);
     }
@@ -94,7 +104,6 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
 
   return (
     <>
-      <Toaster />
       <div className="flex flex-col gap-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

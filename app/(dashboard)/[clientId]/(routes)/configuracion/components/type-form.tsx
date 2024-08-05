@@ -60,14 +60,18 @@ const TypesForm: React.FC<TypesFormProps> = ({
     try {
       setLoading(true);
 
-      await axios.patch(`/api/${params.clientId}/config`, values);
-
       setTypes((prevTypes) => [...prevTypes, values.typeOfCarWash]);
 
-      toast.success("Variable creada!");
+      await toast.promise(
+        axios.patch(`/api/${params.clientId}/config`, values),
+        {
+          loading: "Creando variable...",
+          success: <b>Variable creada!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
+      );
     } catch (error) {
       router.refresh();
-      toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
     }
@@ -77,16 +81,22 @@ const TypesForm: React.FC<TypesFormProps> = ({
     try {
       setLoading(true);
 
-      await axios.delete(`/api/${params.clientId}/config`, {
-        data: { typeOfCarWash: data },
-      });
-
       setTypes((prevTypes) => prevTypes.filter((type) => type !== data));
 
+      await toast.promise(
+        axios.delete(`/api/${params.clientId}/config`, {
+          data: { typeOfCarWash: data },
+        }),
+        {
+          loading: "Eliminando variable...",
+          success: <b>Variable Eliminada!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
+      );
+
       router.refresh();
-      toast.success("Variable eliminada.");
     } catch (error) {
-      toast.error("Algo salió mal...");
+      router.refresh();
     } finally {
       setLoading(false);
     }
@@ -94,7 +104,6 @@ const TypesForm: React.FC<TypesFormProps> = ({
 
   return (
     <>
-      <Toaster />
       <div className="flex flex-col gap-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

@@ -18,7 +18,7 @@ const MobileHeader = () => {
   const pathname = usePathname();
 
   return (
-    <header className="md:hidden bg-gradient-to-r from-[#006aa1] via-[#005b8a] to-[#004c73] px-4 py-1.5 min-h-16 rounded-tl-lg rounded-tr-lg fixed bottom-0 w-full z-50 flex items-center justify-between">
+    <header className="md:hidden bg-gradient-to-r from-[#006aa1] to-[#004c73] px-4 py-1.5 min-h-16 rounded-tl-lg rounded-tr-lg fixed bottom-0 w-full z-50 flex items-center justify-between">
       <Button
         size="sm"
         variant="outline"

@@ -5,6 +5,7 @@ import MessageForm from "./components/message-form";
 import Questions from "./components/questions";
 import prismadb from "@/lib/prismadb";
 import Bubbles from "@/components/bubbles";
+import { Toaster } from "react-hot-toast";
 
 const Configuracion = async ({ params }: { params: { clientId: string } }) => {
   const configs = await prismadb.configuration.findUnique({
@@ -15,6 +16,7 @@ const Configuracion = async ({ params }: { params: { clientId: string } }) => {
 
   return (
     <div className="mb-24 md:mb-7">
+      <Toaster />
       <div className="canvas py-7 mb-7 px-3 lg:px-14 shadow">
         <Bubbles />
         <Heading

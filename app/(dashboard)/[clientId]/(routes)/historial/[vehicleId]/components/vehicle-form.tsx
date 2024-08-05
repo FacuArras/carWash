@@ -2,8 +2,6 @@
 
 import PasswordModal from "@/components/modals/password-modal";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Configuration, Vehicle } from "@prisma/client";
 import axios from "axios";
@@ -12,7 +10,7 @@ import { es } from "date-fns/locale";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import * as z from "zod";
 import {
   Form,
@@ -135,16 +133,21 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
         return;
       }
 
-      await axios.patch(
-        `/api/${params.clientId}/vehicle/${params.vehicleId}`,
-        valuesToSubmit
+      await toast.promise(
+        axios.patch(
+          `/api/${params.clientId}/vehicle/${params.vehicleId}`,
+          valuesToSubmit
+        ),
+        {
+          loading: "Modificando...",
+          success: <b>Registro modificado!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
       );
 
-      toast.success("Vehículo actualizado!");
       window.location.href = `/${params.clientId}/historial`;
     } catch (error) {
       router.refresh();
-      toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
     }
@@ -154,14 +157,19 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
     try {
       setLoading(true);
 
-      await axios.delete(`/api/${params.clientId}/vehicle/${params.vehicleId}`);
+      await toast.promise(
+        axios.delete(`/api/${params.clientId}/vehicle/${params.vehicleId}`),
+        {
+          loading: "Eliminando...",
+          success: <b>Registro eliminado!</b>,
+          error: <b>Algo salió mal...</b>,
+        }
+      );
 
-      toast.success("Vehículo eliminado.");
       setIsAlertModalOpen(false);
       window.location.href = `/${params.clientId}/historial`;
     } catch (error) {
       router.refresh();
-      toast.error("Algo salió mal...");
     } finally {
       setLoading(false);
     }
@@ -465,7 +473,6 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
           )}
         </form>
       </Form>
-      <Toaster />
     </>
   );
 };
