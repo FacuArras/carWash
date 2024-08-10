@@ -1,11 +1,10 @@
-import { format } from "date-fns";
 import { CarClient } from "./components/client";
 import { CarColumn } from "./components/columns";
 import prismadb from "@/lib/prismadb";
-import { es } from "date-fns/locale";
 import { formatter } from "@/lib/utils";
 import Bubbles from "@/components/bubbles";
 import { Heading } from "@/components/ui/heading";
+import { formatInTimeZone } from "date-fns-tz";
 
 const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
   const vehicles = await prismadb.vehicle.findMany({
@@ -23,7 +22,11 @@ const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
     licensePlate: item.licensePlate,
     color: item.color,
     typeOfCarWash: item.typeOfCarWash,
-    createdAt: format(item.createdAt, "dd/MM/yy HH:mm'hs'", { locale: es }),
+    createdAt: formatInTimeZone(
+      item.createdAt,
+      "America/Argentina/Cordoba",
+      "dd/MM/yy HH:mm'hs'"
+    ),
     price: formatter.format(item.price),
     phoneNumber: item.phoneNumber,
     brand: item.brand,
