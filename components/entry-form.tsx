@@ -42,13 +42,17 @@ const formSchema = z.object({
     .min(1, {
       message: "Número de teléfono es obligatorio.",
     })
-    .positive(),
+    .positive({
+      message: "El número de teléfono no puede ser negativo.",
+    }),
   price: z
     .number()
     .min(1, {
       message: "Precio es obligatorio.",
     })
-    .positive(),
+    .positive({
+      message: "El precio no puede ser negativo.",
+    }),
   typeOfCarWash: z.string().min(1, {
     message: "Tipo de lavado es obligatorio.",
   }),
@@ -66,6 +70,8 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const params = useParams();
+  const [openCombobox, setOpenCombobox] = useState(false);
+  const [valueCombobox, setValueCombobox] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,10 +106,8 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
         }
       );
 
-      setTimeout(() => {
-        router.push(`/${params.clientId}/proceso`);
-        router.refresh();
-      }, 2000);
+      router.push(`/${params.clientId}/proceso`);
+      router.refresh();
     } finally {
       setLoading(false);
     }
@@ -144,40 +148,10 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             />
             <FormField
               control={form.control}
-              name="licensePlate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Patente</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Patente del vehículo"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="color"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <FormControl>
-                    <Input disabled={loading} placeholder="Rojo" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Teléfono</FormLabel>
+                  <FormLabel>Teléfono del cliente</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -196,14 +170,14 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             />
             <FormField
               control={form.control}
-              name="brand"
+              name="licensePlate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Marca del vehículo</FormLabel>
+                  <FormLabel>Patente del vehículo</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Volkswagen"
+                      placeholder="Patente del vehículo"
                       {...field}
                     />
                   </FormControl>
@@ -213,20 +187,50 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             />
             <FormField
               control={form.control}
-              name="price"
+              name="color"
               render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Precio</FormLabel>
+                <FormItem>
+                  <FormLabel htmlFor="color">Color del vehículo</FormLabel>
+                  <FormControl>
+                    <Select
+                      name="color"
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger id="color">
+                        <SelectValue placeholder="Seleccioná el color del vehículo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={"blanco"}>Blanco</SelectItem>
+                        <SelectItem value={"negro"}>Negro</SelectItem>
+                        <SelectItem value={"gris"}>Gris</SelectItem>
+                        <SelectItem value={"azul"}>Azul</SelectItem>
+                        <SelectItem value={"rojo"}>Rojo</SelectItem>
+                        <SelectItem value={"verde"}>Verde</SelectItem>
+                        <SelectItem value={"amarillo"}>Amarillo</SelectItem>
+                        <SelectItem value={"celeste"}>Celeste</SelectItem>
+                        <SelectItem value={"marrón"}>Marrón</SelectItem>
+                        <SelectItem value={"naranja"}>Naranja</SelectItem>
+                        <SelectItem value={"violeta"}>Violeta</SelectItem>
+                        <SelectItem value={"rosa"}>Rosa</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Marca del vehículo</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
                       disabled={loading}
-                      placeholder="5000"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        field.onChange(isNaN(value) ? undefined : value);
-                      }}
+                      placeholder="Volkswagen"
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -256,6 +260,28 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                         ))}
                       </SelectContent>
                     </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Precio del lavado</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="5000"
+                      value={field.value ?? ""}
+                      onChange={(e) => {
+                        const value = parseFloat(e.target.value);
+                        field.onChange(isNaN(value) ? undefined : value);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -56,7 +56,9 @@ const formSchema = z.object({
     .min(1, {
       message: "Precio es obligatorio.",
     })
-    .positive(),
+    .positive({
+      message: "El precio no puede ser negativo",
+    }),
   typeOfCarWash: z.string().min(1, {
     message: "Tipo de lavado es obligatorio.",
   }),
@@ -304,10 +306,28 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
             />
             <FormField
               control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Teléfono del cliente</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="3516795024"
+                      readOnly={isNotEditable}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="licensePlate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Patente</FormLabel>
+                  <FormLabel>Patente del vehículo</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
@@ -325,32 +345,32 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
               name="color"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel htmlFor="color">Color del vehículo</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Rojo"
-                      readOnly={isNotEditable}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Teléfono</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="3516795024"
-                      readOnly={isNotEditable}
-                      {...field}
-                    />
+                    <Select
+                      name="color"
+                      disabled={isNotEditable}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger id="color">
+                        <SelectValue placeholder="Seleccioná el color del vehículo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={"blanco"}>Blanco</SelectItem>
+                        <SelectItem value={"negro"}>Negro</SelectItem>
+                        <SelectItem value={"gris"}>Gris</SelectItem>
+                        <SelectItem value={"azul"}>Azul</SelectItem>
+                        <SelectItem value={"rojo"}>Rojo</SelectItem>
+                        <SelectItem value={"verde"}>Verde</SelectItem>
+                        <SelectItem value={"amarillo"}>Amarillo</SelectItem>
+                        <SelectItem value={"celeste"}>Celeste</SelectItem>
+                        <SelectItem value={"marrón"}>Marrón</SelectItem>
+                        <SelectItem value={"naranja"}>Naranja</SelectItem>
+                        <SelectItem value={"violeta"}>Violeta</SelectItem>
+                        <SelectItem value={"rosa"}>Rosa</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -368,29 +388,6 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
                       placeholder="Volkswagen"
                       readOnly={isNotEditable}
                       {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Precio</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="5000"
-                      value={field.value ?? ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        field.onChange(value === "" ? "" : parseFloat(value));
-                      }}
-                      readOnly={isNotEditable}
                     />
                   </FormControl>
                   <FormMessage />
@@ -422,6 +419,29 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Precio</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="5000"
+                      value={field.value ?? ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value === "" ? "" : parseFloat(value));
+                      }}
+                      readOnly={isNotEditable}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

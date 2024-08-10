@@ -27,8 +27,8 @@ const VehiclePage = async ({
       <div className="canvas py-7 mb-7 px-3 lg:px-14 shadow">
         <Bubbles />
         <Heading
-          title="Vehículos en proceso"
-          description="Administra los vehículos que están en proceso de lavado."
+          title="Modificá el vehículo ingresado"
+          description="Si tuviste algún error en el formulario de entrada, corregilo acá!."
         />
       </div>
       <VehicleForm initialData={vehicle} configurations={configs} />

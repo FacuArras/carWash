@@ -6,7 +6,7 @@ const Bubbles = () => {
     const canvas = document.querySelector(".canvas") as HTMLElement | null;
 
     if (canvas) {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 15; i++) {
         const bubble = document.createElement("div");
         bubble.classList.add("bubble");
 

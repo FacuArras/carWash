@@ -59,15 +59,20 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.get("/api/clients", {
-        params: { password: values.password },
-      });
+      await toast.promise(
+        axios.get("/api/clients", {
+          params: { password: values.password },
+        }),
+        {
+          loading: "Comprobando...",
+          success: <b>Contraseña correcta!</b>,
+          error: <b>Contraseña incorrecta.</b>,
+        }
+      );
 
       onConfirm();
       onClose();
-    } catch (error) {
-      toast.error("Contraseña incorrecta.");
-    }
+    } catch (error) {}
   };
 
   if (!isMounted) {

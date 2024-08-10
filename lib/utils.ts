@@ -7,5 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatter = new Intl.NumberFormat("es-AR", {
   style: "currency",
-  currency: "ARS"
+  currency: "ARS",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
 })
