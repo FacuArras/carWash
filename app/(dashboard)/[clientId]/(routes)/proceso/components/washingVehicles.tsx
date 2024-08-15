@@ -116,6 +116,10 @@ const WashingVehicles = ({ data }: WashingVehiclesProps) => {
               Marca: <span className="font-medium text-lg">{item.brand}</span>
             </h3>
             <h3 className="font-semibold text-xl border-b mb-2 pb-0.5">
+              Tipo de lavado:{" "}
+              <span className="font-medium text-lg">{item.typeOfCarWash}</span>
+            </h3>
+            <h3 className="font-semibold text-xl border-b mb-2 pb-0.5">
               Precio: <span className="font-medium text-lg">{item.price}</span>
             </h3>
             <h3 className="font-semibold text-xl border-b mb-2 pb-0.5">
