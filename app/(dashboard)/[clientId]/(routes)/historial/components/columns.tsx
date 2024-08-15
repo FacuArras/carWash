@@ -33,8 +33,12 @@ export const columns: ColumnDef<CarColumn>[] = [
     header: "Color",
   },
   {
+    accessorKey: "phoneNumber",
+    header: "Número de teléfono",
+  },
+  {
     accessorKey: "typeOfCarWash",
-    header: "Tipo",
+    header: "Tipo de lavado",
   },
   { accessorKey: "price", header: "Precio" },
   {

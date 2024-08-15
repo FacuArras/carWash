@@ -11,9 +11,10 @@ import { Vehicle } from "../page";
 
 type WashingVehiclesProps = {
   data: Vehicle[];
+  onChangeStatus: (vehicleId: string) => void;
 };
 
-const WashingVehicles = ({ data }: WashingVehiclesProps) => {
+const WashingVehicles = ({ data, onChangeStatus }: WashingVehiclesProps) => {
   const [washingVehicles, setWashingVehicles] = useState<Vehicle[]>(data);
   const router = useRouter();
   const params = useParams();
@@ -37,6 +38,8 @@ const WashingVehicles = ({ data }: WashingVehiclesProps) => {
         setWashingVehicles((prevVehicles) =>
           prevVehicles.filter((vehicle) => vehicle.id !== vehicleId)
         );
+
+        onChangeStatus(vehicleId);
       }
     } catch (error) {
       router.refresh();
@@ -59,6 +62,8 @@ const WashingVehicles = ({ data }: WashingVehiclesProps) => {
         setWashingVehicles((prevVehicles) =>
           prevVehicles.filter((vehicle) => vehicle.id !== vehicleData.id)
         );
+
+        onChangeStatus(vehicleData.id);
       }
     } catch (error) {
       router.refresh();

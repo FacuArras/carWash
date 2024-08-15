@@ -87,10 +87,18 @@ const InProcessPage = () => {
     setSelectedButton(buttonType);
   };
 
-  const onChangeStatus = (vehicleId: string) => {
+  const onChangeStatusToWashing = (vehicleId: string) => {
     setVehicles((prevVehicles) =>
       prevVehicles.map((vehicle) =>
         vehicle.id === vehicleId ? { ...vehicle, status: "washing" } : vehicle
+      )
+    );
+  };
+
+  const onChangeStatusToWashed = (vehicleId: string) => {
+    setVehicles((prevVehicles) =>
+      prevVehicles.map((vehicle) =>
+        vehicle.id === vehicleId ? { ...vehicle, status: "washed" } : vehicle
       )
     );
   };
@@ -99,12 +107,13 @@ const InProcessPage = () => {
     waiting: (
       <WaitingVehicles
         data={vehicles.filter((data) => data.status === "waiting")}
-        onChangeStatus={onChangeStatus}
+        onChangeStatus={onChangeStatusToWashing}
       />
     ),
     washing: (
       <WashingVehicles
         data={vehicles.filter((data) => data.status === "washing")}
+        onChangeStatus={onChangeStatusToWashed}
       />
     ),
   };
