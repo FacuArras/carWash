@@ -10,7 +10,7 @@ const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
   const vehicles = await prismadb.vehicle.findMany({
     where: {
       clientId: params.clientId,
-      washed: true,
+      status: "washed",
     },
     orderBy: {
       createdAt: "desc",

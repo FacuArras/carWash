@@ -34,9 +34,7 @@ export async function sendMessage(
 
     const mensajeReemplazado = reemplazarPalabras(messageTemplate, data);
 
-    await axios.patch(`/api/${clientId}/vehicle/${data.id}/ready`, {
-      washed: true,
-    });
+    await axios.patch(`/api/${clientId}/vehicle/${data.id}/washed`);
 
     window.open(`https://wa.me/${data.phoneNumber}?text=${mensajeReemplazado}`);
   } catch (error) {

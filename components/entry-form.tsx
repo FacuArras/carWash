@@ -70,8 +70,6 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const params = useParams();
-  const [openCombobox, setOpenCombobox] = useState(false);
-  const [valueCombobox, setValueCombobox] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -117,7 +115,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="px-3 lg:px-14">
-          <div className="grid grid-cols-1 px-3 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
+          <div className="grid grid-cols-1 px-3 md:grid-cols-2 lg:px-0 lg:grid-cols-3 items-center justify-center gap-10 mb-10">
             <FormField
               control={form.control}
               name="vehicle"
@@ -187,6 +185,23 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
             />
             <FormField
               control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Marca del vehículo</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Volkswagen"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="color"
               render={({ field }) => (
                 <FormItem>
@@ -215,23 +230,6 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                         <SelectItem value={"rosa"}>Rosa</SelectItem>
                       </SelectContent>
                     </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="brand"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Marca del vehículo</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Volkswagen"
-                      {...field}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

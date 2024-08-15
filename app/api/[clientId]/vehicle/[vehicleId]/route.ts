@@ -91,7 +91,7 @@ export async function PATCH(
             brand,
             observations,
             clientId: params.clientId,
-            ...(currentVehicle.washed && { updatedValue: updatedValues }),
+            ...(currentVehicle.status === "washed" && { updatedValue: updatedValues }),
         };
 
         const vehicleUpdated = await prismadb.vehicle.update({

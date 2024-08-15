@@ -218,7 +218,7 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 px-3 pt-2 md:grid-cols-2 lg:px-14 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
+          <div className="grid grid-cols-1 px-3 pt-2 md:grid-cols-2 lg:px-14 lg:grid-cols-3 items-center justify-center gap-10 mb-10">
             <div>
               <p className="font-semibold block text-md text-[#000f17]">
                 Ingreso
@@ -342,6 +342,24 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
             />
             <FormField
               control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Marca del vehículo</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Volkswagen"
+                      readOnly={isNotEditable}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="color"
               render={({ field }) => (
                 <FormItem>
@@ -371,24 +389,6 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
                         <SelectItem value={"rosa"}>Rosa</SelectItem>
                       </SelectContent>
                     </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="brand"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Marca del vehículo</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Volkswagen"
-                      readOnly={isNotEditable}
-                      {...field}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

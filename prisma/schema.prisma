@@ -17,6 +17,12 @@ model Client {
   configuration Configuration? @relation("ClientToConfig")
 }
 
+enum Status {
+  waiting
+  washing
+  washed
+}
+
 model Vehicle {
   id            String    @id @default(uuid()) @map("_id")
   vehicle       String
@@ -27,9 +33,10 @@ model Vehicle {
   typeOfCarWash String
   brand         String
   observations  String?
-  washed        Boolean   @default(false)
+  status        Status    @default(waiting)
   createdAt     DateTime  @default(now())
   washedAt      DateTime?
+  startToWashAt DateTime?
   updatedAt     DateTime  @updatedAt
   updatedValue  Json?
   client        Client    @relation("ClientToVehicle", fields: [clientId], references: [id])

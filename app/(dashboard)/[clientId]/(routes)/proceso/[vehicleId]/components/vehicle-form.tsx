@@ -167,7 +167,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 px-3 lg:px-14 pt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-6 lg:gap-10 mb-10">
+          <div className="grid grid-cols-1 px-3 lg:px-14 pt-2 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-10 mb-10">
             <FormField
               control={form.control}
               name="vehicle"
@@ -232,6 +232,23 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
             />
             <FormField
               control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Marca del vehículo</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Volkswagen"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="color"
               render={({ field }) => (
                 <FormItem>
@@ -260,23 +277,6 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                         <SelectItem value={"rosa"}>Rosa</SelectItem>
                       </SelectContent>
                     </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="brand"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Marca del vehículo</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Volkswagen"
-                      {...field}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
