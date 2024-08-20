@@ -125,7 +125,7 @@ const WaitingVehicles = ({ data, onChangeStatus }: WaitingVehiclesProps) => {
               </Button>
               <Button
                 type="button"
-                className="w-full px-4 h-12 text-md font-bold bg-[#277fab] border text-white"
+                className="w-full px-4 h-12 text-md font-bold bg-[#004c73] border text-white"
                 onClick={() => onWashed(item.id)}
               >
                 Comenzar lavado

@@ -19,17 +19,19 @@ const InProcessPage = async ({ params }: { params: { clientId: string } }) => {
 
   const formattedData: CarColumn[] = vehicles.map((item) => ({
     id: item.id,
+    vehicle: item.vehicle,
+    phoneNumber: item.phoneNumber,
+    price: formatter.format(item.price),
     licensePlate: item.licensePlate,
     color: item.color,
     typeOfCarWash: item.typeOfCarWash,
+    brand: item.brand,
     createdAt: formatInTimeZone(
       item.createdAt,
       "America/Argentina/Cordoba",
       "dd/MM/yy HH:mm'hs'"
     ),
-    price: formatter.format(item.price),
-    phoneNumber: item.phoneNumber,
-    brand: item.brand,
+    status: item.status,
     observations: item.observations ? item.observations : "Ninguna",
   }));
 

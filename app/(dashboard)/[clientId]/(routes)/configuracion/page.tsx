@@ -26,7 +26,9 @@ const Configuracion = async ({ params }: { params: { clientId: string } }) => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 px-3 lg:px-14 items-start justify-between gap-y-10 gap-x-6 lg:gap-10 mb-10">
         <VehicleForm vehiclesConfiguration={configs!.vehicle} />
-        <TypesForm typesOfCarWashConfiguration={configs!.typeOfCarWash} />
+        <TypesForm
+          typesOfCarWashConfiguration={configs!.typeOfCarWash as any}
+        />
         <MessageForm messageConfiguration={configs!.message} />
         <Questions />
       </div>

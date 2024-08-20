@@ -71,10 +71,15 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
   initialData,
   configurations,
 }) => {
+  const [price, setPrice] = useState<number>(initialData!.price);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const router = useRouter();
+  const typeOfCarWash = configurations!.typeOfCarWash as Array<{
+    type: string;
+    price: number;
+  }> | null;
 
   const form = useForm<VehicleFormValues>({
     resolver: zodResolver(formSchema),
@@ -94,6 +99,18 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
           observations: "",
         },
   });
+
+  const handleTypeOfCarWashChange = (value: string) => {
+    form.setValue("typeOfCarWash", value);
+    const selected = typeOfCarWash?.find((item) => item.type === value);
+    if (selected) {
+      setPrice(selected.price);
+      form.setValue("price", selected.price);
+    } else {
+      setPrice(8500);
+      form.setValue("price", 8500);
+    }
+  };
 
   const onSubmit = async (values: VehicleFormValues) => {
     const hasChanges = Object.keys(values).some(
@@ -252,31 +269,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               name="color"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="color">Color del vehículo</FormLabel>
+                  <FormLabel>Color del vehículo</FormLabel>
                   <FormControl>
-                    <Select
-                      name="color"
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger id="color">
-                        <SelectValue placeholder="Seleccioná el color del vehículo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={"blanco"}>Blanco</SelectItem>
-                        <SelectItem value={"negro"}>Negro</SelectItem>
-                        <SelectItem value={"gris"}>Gris</SelectItem>
-                        <SelectItem value={"azul"}>Azul</SelectItem>
-                        <SelectItem value={"rojo"}>Rojo</SelectItem>
-                        <SelectItem value={"verde"}>Verde</SelectItem>
-                        <SelectItem value={"amarillo"}>Amarillo</SelectItem>
-                        <SelectItem value={"celeste"}>Celeste</SelectItem>
-                        <SelectItem value={"marrón"}>Marrón</SelectItem>
-                        <SelectItem value={"naranja"}>Naranja</SelectItem>
-                        <SelectItem value={"violeta"}>Violeta</SelectItem>
-                        <SelectItem value={"rosa"}>Rosa</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input disabled={loading} placeholder="Blanco" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -288,24 +283,25 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="typeOfCarWash">Tipo de lavado</FormLabel>
-                  <Select
-                    name="typeOfCarWash"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
+                  <FormControl>
+                    <Select
+                      name="typeOfCarWash"
+                      onValueChange={handleTypeOfCarWashChange}
+                      defaultValue={field.value}
+                    >
                       <SelectTrigger id="typeOfCarWash">
                         <SelectValue placeholder="Seleccioná el tipo de lavado a realizar" />
                       </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {configurations!.typeOfCarWash.map((typeOfCarWash) => (
-                        <SelectItem key={typeOfCarWash} value={typeOfCarWash}>
-                          {typeOfCarWash}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <SelectContent>
+                        {typeOfCarWash &&
+                          typeOfCarWash.map((item) => (
+                            <SelectItem key={item.type} value={item.type}>
+                              {item.type}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

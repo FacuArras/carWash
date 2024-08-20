@@ -22,7 +22,6 @@ export async function GET(
 
 interface ConfigUpdates {
     vehicle?: string;
-    typeOfCarWash?: string;
     message?: string;
 }
 
@@ -60,15 +59,10 @@ export async function PATCH(
         }
 
         let updatedVehicle = currentConfig.vehicle ? [...currentConfig.vehicle] : [];
-        let updatedTypeOfCarWash = currentConfig.typeOfCarWash ? [...currentConfig.typeOfCarWash] : [];
         let updatedMessage = currentConfig.message;
 
         if (configUpdates.vehicle) {
             updatedVehicle = Array.from(new Set([...updatedVehicle, configUpdates.vehicle]));
-        }
-
-        if (configUpdates.typeOfCarWash) {
-            updatedTypeOfCarWash = Array.from(new Set([...updatedTypeOfCarWash, configUpdates.typeOfCarWash]));
         }
 
         if (configUpdates.message) {
@@ -79,7 +73,6 @@ export async function PATCH(
             where: { clientId: params.clientId },
             data: {
                 vehicle: updatedVehicle,
-                typeOfCarWash: updatedTypeOfCarWash,
                 message: updatedMessage
             }
         });
@@ -103,13 +96,12 @@ export async function DELETE(
             return new NextResponse("Unauthenticated", { status: 401 });
         }
 
-        const { vehicle, typeOfCarWash } = body;
+        const { vehicle } = body;
 
-        if (!vehicle && !typeOfCarWash) {
-            return new NextResponse("Bad Request: vehicle or typeOfCarWash required", { status: 400 });
+        if (!vehicle) {
+            return new NextResponse("Bad Request: vehicle required", { status: 400 });
         }
 
-        // Obtén la configuración actual del cliente
         const currentConfig = await prismadb.configuration.findUnique({
             where: { clientId: params.clientId }
         });
@@ -118,24 +110,16 @@ export async function DELETE(
             return new NextResponse("Configuration not found", { status: 404 });
         }
 
-        // Elimina el elemento correspondiente de la lista
         let updatedVehicle = currentConfig.vehicle;
-        let updatedTypeOfCarWash = currentConfig.typeOfCarWash;
 
         if (vehicle) {
             updatedVehicle = updatedVehicle.filter((item: string) => item !== vehicle);
         }
 
-        if (typeOfCarWash) {
-            updatedTypeOfCarWash = updatedTypeOfCarWash.filter((item: string) => item !== typeOfCarWash);
-        }
-
-        // Actualiza la configuración en la base de datos
         const updatedConfig = await prismadb.configuration.update({
             where: { clientId: params.clientId },
             data: {
                 vehicle: updatedVehicle,
-                typeOfCarWash: updatedTypeOfCarWash
             }
         });
 
@@ -144,4 +128,4 @@ export async function DELETE(
         console.log("[CONFIG_DELETE]", error);
         return new NextResponse("Internal error", { status: 500 });
     }
-};
+}

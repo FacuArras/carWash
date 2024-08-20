@@ -4,7 +4,7 @@ import { SignIn, ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
 export default function Page() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="font-bold text-3xl text-center">¡Bienvenido de vuelta!</h1>
+      <h1 className="font-bold text-3xl text-center">¡Bienvenido!</h1>
       <div className="flex items-center justify-center mt-10">
         <ClerkLoaded>
           <SignIn />

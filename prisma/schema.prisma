@@ -48,7 +48,7 @@ model Vehicle {
 model Configuration {
   id            String   @id @default(uuid()) @map("_id")
   vehicle       String[] @default(["auto", "moto"])
-  typeOfCarWash String[] @default(["completo", "interior", "solo exterior"])
+  typeOfCarWash Json     @default("[{\"type\": \"Exterior\", \"price\": 8500}, {\"type\": \"Interior\", \"price\": 6500}, {\"type\": \"Completo\", \"price\": 12500}]")
   message       String   @default("Tu 'vehículo' patente 'patente' de color 'color', ya está listo para que lo retires!")
   Client        Client?  @relation("ClientToConfig", fields: [clientId], references: [id])
   clientId      String   @unique

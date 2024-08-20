@@ -38,7 +38,9 @@ const formSchema = z.object({
     message: "Color es obligatorio.",
   }),
   phoneNumber: z
-    .number()
+    .number({
+      message: "Número de teléfono es obligatorio.",
+    })
     .min(1, {
       message: "Número de teléfono es obligatorio.",
     })
@@ -46,12 +48,17 @@ const formSchema = z.object({
       message: "El número de teléfono no puede ser negativo.",
     }),
   price: z
-    .number()
+    .number({
+      message: "Precio es obligatorio.",
+    })
     .min(1, {
       message: "Precio es obligatorio.",
     })
     .positive({
       message: "El precio no puede ser negativo.",
+    })
+    .int({
+      message: "No es necesario poner puntos.",
     }),
   typeOfCarWash: z.string().min(1, {
     message: "Tipo de lavado es obligatorio.",
@@ -68,8 +75,25 @@ interface EntryFormProps {
 
 const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
   const [loading, setLoading] = useState(false);
+  const [price, setPrice] = useState<number>(0);
   const router = useRouter();
   const params = useParams();
+  const typeOfCarWash = configurations.typeOfCarWash as Array<{
+    type: string;
+    price: number;
+  }> | null;
+
+  const handleTypeOfCarWashChange = (value: string) => {
+    form.setValue("typeOfCarWash", value);
+    const selected = typeOfCarWash?.find((item) => item.type === value);
+    if (selected) {
+      setPrice(selected.price);
+      form.setValue("price", selected.price);
+    } else {
+      setPrice(0);
+      form.setValue("price", 0);
+    }
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -78,7 +102,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
       licensePlate: "",
       color: "",
       phoneNumber: undefined,
-      price: undefined,
+      price: 0,
       typeOfCarWash: "",
       brand: "",
       observations: "",
@@ -205,31 +229,9 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
               name="color"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="color">Color del vehículo</FormLabel>
+                  <FormLabel>Color del vehículo</FormLabel>
                   <FormControl>
-                    <Select
-                      name="color"
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger id="color">
-                        <SelectValue placeholder="Seleccioná el color del vehículo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={"blanco"}>Blanco</SelectItem>
-                        <SelectItem value={"negro"}>Negro</SelectItem>
-                        <SelectItem value={"gris"}>Gris</SelectItem>
-                        <SelectItem value={"azul"}>Azul</SelectItem>
-                        <SelectItem value={"rojo"}>Rojo</SelectItem>
-                        <SelectItem value={"verde"}>Verde</SelectItem>
-                        <SelectItem value={"amarillo"}>Amarillo</SelectItem>
-                        <SelectItem value={"celeste"}>Celeste</SelectItem>
-                        <SelectItem value={"marrón"}>Marrón</SelectItem>
-                        <SelectItem value={"naranja"}>Naranja</SelectItem>
-                        <SelectItem value={"violeta"}>Violeta</SelectItem>
-                        <SelectItem value={"rosa"}>Rosa</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input disabled={loading} placeholder="Blanco" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -244,18 +246,19 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                   <FormControl>
                     <Select
                       name="typeOfCarWash"
-                      onValueChange={field.onChange}
+                      onValueChange={handleTypeOfCarWashChange}
                       defaultValue={field.value}
                     >
                       <SelectTrigger id="typeOfCarWash">
                         <SelectValue placeholder="Seleccioná el tipo de lavado a realizar" />
                       </SelectTrigger>
                       <SelectContent>
-                        {configurations.typeOfCarWash.map((typeOfCarWash) => (
-                          <SelectItem key={typeOfCarWash} value={typeOfCarWash}>
-                            {typeOfCarWash}
-                          </SelectItem>
-                        ))}
+                        {typeOfCarWash &&
+                          typeOfCarWash.map((item) => (
+                            <SelectItem key={item.type} value={item.type}>
+                              {item.type}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -274,10 +277,11 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
                       type="number"
                       disabled={loading}
                       placeholder="5000"
-                      value={field.value ?? ""}
+                      value={price}
                       onChange={(e) => {
                         const value = parseFloat(e.target.value);
-                        field.onChange(isNaN(value) ? undefined : value);
+                        field.onChange(isNaN(value) ? 8500 : value); // Default price if NaN
+                        setPrice(isNaN(value) ? 8500 : value); // Default price if NaN
                       }}
                     />
                   </FormControl>

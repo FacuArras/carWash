@@ -58,8 +58,6 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
     try {
       setLoading(true);
 
-      setVehicles((prevVehicles) => [...prevVehicles, values.vehicle]);
-
       await toast.promise(
         axios.patch(`/api/${params.clientId}/config`, values),
         {
@@ -68,6 +66,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
           error: <b>Algo salió mal...</b>,
         }
       );
+
+      setVehicles((prevVehicles) => [...prevVehicles, values.vehicle]);
     } catch (error) {
       router.refresh();
     } finally {
@@ -130,7 +130,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
             />
           </form>
         </Form>
-        <div className="flex gap-x-2 gap-y-3 overflow-x-auto overflow-y-visible items-center scrollbar-hidden">
+        <div className="flex gap-x-2 gap-y-3 overflow-x-auto overflow-y-visible items-center scrollbar-hidden lg:flex-wrap">
           {loading
             ? Array.from({ length: 3 }).map((_, index) => (
                 <Skeleton
@@ -142,11 +142,12 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
                 <Badge
                   variant="secondary"
                   key={vehicle}
-                  className="cursor-pointer h-fit min-w-fit group relative transition-all hover:pl-4 hover:py-2 hover:bg-[#004c73] hover:text-white"
+                  className="cursor-pointer h-fit min-w-fit group relative transition-all focus:pl-4 focus:py-2 focus:bg-[#004c73] focus:text-white"
+                  tabIndex={0}
                 >
                   {vehicle}
                   <X
-                    className="hidden group-hover:block ml-5"
+                    className="hidden group-focus:block ml-5"
                     width={20}
                     height={20}
                     onClick={() => onDelete(vehicle)}

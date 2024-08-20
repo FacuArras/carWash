@@ -20,35 +20,35 @@ export async function PATCH(
 
         if (!userId) {
             return new NextResponse("Unauthenticated", { status: 401 });
-        };
+        }
 
         if (!vehicle) {
             return new NextResponse("Vehicle Plate is required", { status: 400 });
-        };
+        }
 
         if (!licensePlate) {
             return new NextResponse("License Plate is required", { status: 400 });
-        };
+        }
 
         if (!color) {
             return new NextResponse("Color is required", { status: 400 });
-        };
+        }
 
         if (!phoneNumber) {
             return new NextResponse("Phone Number is required", { status: 400 });
-        };
+        }
 
         if (!price) {
             return new NextResponse("Price is required", { status: 400 });
-        };
+        }
 
         if (!typeOfCarWash) {
             return new NextResponse("The type of car wash is required", { status: 400 });
-        };
+        }
 
         if (!brand) {
             return new NextResponse("Car brand is required", { status: 400 });
-        };
+        }
 
         const clientByUserId = await prismadb.client.findFirst({
             where: {
@@ -59,7 +59,7 @@ export async function PATCH(
 
         if (!clientByUserId) {
             return new NextResponse("Unauthorized", { status: 403 });
-        };
+        }
 
         const currentVehicle = await prismadb.vehicle.findUnique({
             where: {
@@ -71,15 +71,18 @@ export async function PATCH(
             return new NextResponse("Vehicle not found", { status: 404 });
         }
 
-        const updatedValues: Record<string, any> = {};
-        if (currentVehicle.vehicle !== vehicle) updatedValues.vehicle = vehicle;
-        if (currentVehicle.licensePlate !== licensePlate) updatedValues.licensePlate = licensePlate;
-        if (currentVehicle.color !== color) updatedValues.color = color;
-        if (currentVehicle.phoneNumber !== phoneNumber) updatedValues.phoneNumber = phoneNumber;
-        if (currentVehicle.price !== price) updatedValues.price = price;
-        if (currentVehicle.typeOfCarWash !== typeOfCarWash) updatedValues.typeOfCarWash = typeOfCarWash;
-        if (currentVehicle.brand !== brand) updatedValues.brand = brand;
-        if (currentVehicle.observations !== observations) updatedValues.observations = observations;
+        const updatedValue: Record<string, any> = {};
+
+        if (currentVehicle.vehicle !== vehicle) updatedValue.vehicle = vehicle;
+        if (currentVehicle.licensePlate !== licensePlate) updatedValue.licensePlate = licensePlate;
+        if (currentVehicle.color !== color) updatedValue.color = color;
+        if (currentVehicle.phoneNumber !== phoneNumber) updatedValue.phoneNumber = phoneNumber;
+        if (currentVehicle.price !== price) updatedValue.price = price;
+        if (currentVehicle.typeOfCarWash !== typeOfCarWash) updatedValue.typeOfCarWash = typeOfCarWash;
+        if (currentVehicle.brand !== brand) updatedValue.brand = brand;
+        if (currentVehicle.observations !== observations) updatedValue.observations = observations;
+
+        const currentUpdatedValue = (currentVehicle.updatedValue ?? {}) as Record<string, any>;
 
         const dataToUpdate = {
             vehicle,
@@ -91,7 +94,12 @@ export async function PATCH(
             brand,
             observations,
             clientId: params.clientId,
-            ...(currentVehicle.status === "washed" && { updatedValue: updatedValues }),
+            ...(currentVehicle.status === "washed" && {
+                updatedValue: {
+                    ...currentUpdatedValue,
+                    ...updatedValue,
+                }
+            }),
         };
 
         const vehicleUpdated = await prismadb.vehicle.update({
@@ -105,8 +113,9 @@ export async function PATCH(
     } catch (error) {
         console.log("[VEHICLE_PATCH]", error);
         return new NextResponse("Internal error", { status: 500 });
-    };
-};
+    }
+}
+
 
 export async function DELETE(
     req: Request,
