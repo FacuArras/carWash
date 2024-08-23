@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { useConfigurationsStore } from "@/store/configurations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
@@ -18,10 +19,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import * as z from "zod";
-
-interface MessageFormProps {
-  messageConfiguration: string;
-}
 
 const formSchema = z.object({
   message: z.string().min(1, {
@@ -31,14 +28,17 @@ const formSchema = z.object({
 
 type MessageFormValues = z.infer<typeof formSchema>;
 
-const MessageForm: React.FC<MessageFormProps> = ({ messageConfiguration }) => {
+const MessageForm = () => {
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const router = useRouter();
+  const messageConfiguration = useConfigurationsStore(
+    (state) => state.currentConfiguration
+  );
 
   const form = useForm<MessageFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { message: messageConfiguration },
+    defaultValues: { message: "" },
   });
 
   const onSubmit = async (values: MessageFormValues) => {
@@ -54,7 +54,7 @@ const MessageForm: React.FC<MessageFormProps> = ({ messageConfiguration }) => {
         }
       );
 
-      location.reload();
+      useConfigurationsStore.getState().modifyMessage(values.message);
     } catch (error) {
       router.refresh();
     } finally {
@@ -85,9 +85,9 @@ const MessageForm: React.FC<MessageFormProps> = ({ messageConfiguration }) => {
                     <Textarea
                       disabled={loading}
                       placeholder={
-                        messageConfiguration
-                          ? messageConfiguration
-                          : "Tu 'vehículo' patente 'patente' de color 'color', ya está listo para que lo retires!"
+                        messageConfiguration.message
+                          ? messageConfiguration.message
+                          : ""
                       }
                       {...field}
                       className="resize-none"

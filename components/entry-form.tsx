@@ -26,6 +26,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Configuration } from "@prisma/client";
 import { Textarea } from "@/components/ui/textarea";
+import { useConfigurationsStore } from "@/store/configurations";
 
 const formSchema = z.object({
   vehicle: z.string().min(1, {
@@ -69,31 +70,19 @@ const formSchema = z.object({
   observations: z.string().optional(),
 });
 
-interface EntryFormProps {
-  configurations: Configuration;
-}
-
-const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
+const EntryForm = () => {
   const [loading, setLoading] = useState(false);
   const [price, setPrice] = useState<number>(0);
   const router = useRouter();
   const params = useParams();
-  const typeOfCarWash = configurations.typeOfCarWash as Array<{
+  const configurations = useConfigurationsStore(
+    (state) => state.currentConfiguration
+  );
+
+  const typeOfCarWash = configurations!.typeOfCarWash as Array<{
     type: string;
     price: number;
   }> | null;
-
-  const handleTypeOfCarWashChange = (value: string) => {
-    form.setValue("typeOfCarWash", value);
-    const selected = typeOfCarWash?.find((item) => item.type === value);
-    if (selected) {
-      setPrice(selected.price);
-      form.setValue("price", selected.price);
-    } else {
-      setPrice(0);
-      form.setValue("price", 0);
-    }
-  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -108,6 +97,14 @@ const EntryForm: React.FC<EntryFormProps> = ({ configurations }) => {
       observations: "",
     },
   });
+
+  const handleTypeOfCarWashChange = (value: string) => {
+    form.setValue("typeOfCarWash", value);
+    const selected = typeOfCarWash?.find((item) => item.type === value);
+    const newPrice = selected ? selected.price : 0;
+    setPrice(newPrice);
+    form.setValue("price", newPrice);
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {

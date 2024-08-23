@@ -31,7 +31,7 @@ const VehiclePage = async ({
           description="Mirá los detalles del vehículo que ya lavaste, si tuviste algún error y querés modificarlo o eliminarlo acá podes hacerlo."
         />
       </div>
-      <VehicleForm initialData={vehicle} configurations={configs} />
+      <VehicleForm initialData={vehicle} />
     </div>
   );
 };

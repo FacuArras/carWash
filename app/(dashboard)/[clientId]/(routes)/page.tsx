@@ -1,16 +1,9 @@
 import Bubbles from "@/components/bubbles";
 import EntryForm from "@/components/entry-form";
 import { Heading } from "@/components/ui/heading";
-import prismadb from "@/lib/prismadb";
 import { Toaster } from "react-hot-toast";
 
 const Home = async ({ params }: { params: { clientId: string } }) => {
-  const configs = await prismadb.configuration.findUnique({
-    where: {
-      clientId: params.clientId,
-    },
-  });
-
   return (
     <div className="mb-24 md:mb-7">
       <Toaster />
@@ -21,7 +14,7 @@ const Home = async ({ params }: { params: { clientId: string } }) => {
           description="Completá el formulario con los datos del vehículo ingresante."
         />
       </div>
-      <EntryForm configurations={configs!} />
+      <EntryForm />
     </div>
   );
 };

@@ -12,10 +12,28 @@ import {
 } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
+import { useEffect } from "react";
+import { useConfigurationsStore } from "@/store/configurations";
+import { Configuration } from "@prisma/client";
 
-const MobileHeader = () => {
+interface HeaderProps {
+  configs: Configuration;
+}
+
+const MobileHeader: React.FC<HeaderProps> = ({ configs }) => {
   const params = useParams();
   const pathname = usePathname();
+  const setConfigurations = useConfigurationsStore(
+    (state) => state.setConfigurations
+  );
+
+  useEffect(() => {
+    setConfigurations({
+      vehicle: configs.vehicle,
+      typeOfCarWash: configs.typeOfCarWash,
+      message: configs.message,
+    });
+  }, [configs, setConfigurations]);
 
   return (
     <header className="md:hidden bg-gradient-to-r from-[#006aa1] to-[#004c73] px-4 py-1.5 min-h-16 rounded-tl-lg rounded-tr-lg fixed bottom-0 w-full z-50 flex items-center justify-between">

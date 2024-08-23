@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useConfigurationsStore } from "@/store/configurations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Configuration, Vehicle } from "@prisma/client";
 import axios from "axios";
@@ -30,7 +31,6 @@ import * as z from "zod";
 
 interface VehicleFormProps {
   initialData: Vehicle | null;
-  configurations: Configuration | null;
 }
 
 const formSchema = z.object({
@@ -67,15 +67,16 @@ const formSchema = z.object({
 
 type VehicleFormValues = z.infer<typeof formSchema>;
 
-const VehicleForm: React.FC<VehicleFormProps> = ({
-  initialData,
-  configurations,
-}) => {
+const VehicleForm: React.FC<VehicleFormProps> = ({ initialData }) => {
   const [price, setPrice] = useState<number>(initialData!.price);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const params = useParams();
   const router = useRouter();
+  const configurations = useConfigurationsStore(
+    (state) => state.currentConfiguration
+  );
+
   const typeOfCarWash = configurations!.typeOfCarWash as Array<{
     type: string;
     price: number;

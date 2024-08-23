@@ -30,10 +30,10 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import AlertModal from "@/components/modals/alert-modal";
+import { useConfigurationsStore } from "@/store/configurations";
 
 interface VehicleHistorialProps {
   initialData: Vehicle | null;
-  configurations: Configuration | null;
 }
 
 const formSchema = z.object({
@@ -70,10 +70,7 @@ const formSchema = z.object({
 
 type VehicleHistorialValues = z.infer<typeof formSchema>;
 
-const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
-  initialData,
-  configurations,
-}) => {
+const VehicleHistorial: React.FC<VehicleHistorialProps> = ({ initialData }) => {
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -81,6 +78,10 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({
   const [isNotEditable, setIsNotEditable] = useState(true);
   const router = useRouter();
   const params = useParams();
+  const configurations = useConfigurationsStore(
+    (state) => state.currentConfiguration
+  );
+
   const typeOfCarWash = configurations!.typeOfCarWash as Array<{
     type: string;
     price: number;

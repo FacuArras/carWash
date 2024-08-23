@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useConfigurationsStore } from "@/store/configurations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { PlusIcon, X } from "lucide-react";
@@ -20,10 +21,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-
-interface TypesFormProps {
-  typesOfCarWashConfiguration: { type: string; price: number }[] | null;
-}
 
 const formSchema = z.object({
   typeOfCarWash: z.string().min(1, {
@@ -46,13 +43,19 @@ const formSchema = z.object({
 
 type TypesFormValues = z.infer<typeof formSchema>;
 
-const TypesForm: React.FC<TypesFormProps> = ({
-  typesOfCarWashConfiguration,
-}) => {
+type TypeOfCarWash = {
+  type: string;
+  price: number;
+};
+
+const TypesForm = () => {
   const [loading, setLoading] = useState(true);
-  const [types, setTypes] = useState<{ type: string; price: number }[]>([]);
+  const [types, setTypes] = useState<TypeOfCarWash[]>([]); // Cambié el tipo aquí
   const params = useParams();
   const router = useRouter();
+  const typesOfCarWashConfiguration = useConfigurationsStore(
+    (state) => state.currentConfiguration
+  );
 
   const form = useForm<TypesFormValues>({
     resolver: zodResolver(formSchema),
@@ -61,7 +64,7 @@ const TypesForm: React.FC<TypesFormProps> = ({
 
   useEffect(() => {
     if (typesOfCarWashConfiguration) {
-      setTypes(typesOfCarWashConfiguration);
+      setTypes(typesOfCarWashConfiguration.typeOfCarWash as TypeOfCarWash[]); // Asegúrate de que sea un array
       setLoading(false);
     } else {
       setLoading(false);
@@ -72,7 +75,10 @@ const TypesForm: React.FC<TypesFormProps> = ({
     try {
       setLoading(true);
 
-      const newType = { type: values.typeOfCarWash, price: values.price };
+      const newType: TypeOfCarWash = {
+        type: values.typeOfCarWash,
+        price: values.price,
+      };
 
       await toast.promise(
         axios.patch(`/api/${params.clientId}/config/typeOfCarWash`, {
@@ -86,6 +92,8 @@ const TypesForm: React.FC<TypesFormProps> = ({
       );
 
       setTypes((prevTypes) => [...prevTypes, newType]);
+
+      useConfigurationsStore.getState().addCarWashType(newType);
     } catch (error) {
       router.refresh();
     } finally {
@@ -111,6 +119,8 @@ const TypesForm: React.FC<TypesFormProps> = ({
       );
 
       setTypes(updatedTypes);
+
+      useConfigurationsStore.getState().removeCarWashType(type);
     } catch (error) {
       router.refresh();
     } finally {

@@ -1,6 +1,7 @@
 import Header from "@/components/header";
 import MobileHeader from "@/components/mobile-header";
 import prismadb from "@/lib/prismadb";
+import { useConfigurationsStore } from "@/store/configurations";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -27,9 +28,15 @@ const DashboardLayout = async ({ children, params }: DashboardLayoutProps) => {
     redirect("/");
   }
 
+  const configs = await prismadb.configuration.findUnique({
+    where: {
+      clientId: params.clientId,
+    },
+  });
+
   return (
     <>
-      <MobileHeader />
+      <MobileHeader configs={configs!} />
       <Header />
       <main>{children}</main>
     </>

@@ -15,12 +15,6 @@ const VehiclePage = async ({
     },
   });
 
-  const configs = await prismadb.configuration.findUnique({
-    where: {
-      clientId: params.clientId,
-    },
-  });
-
   return (
     <div className="mb-24 md:mb-7">
       <Toaster />
@@ -31,7 +25,7 @@ const VehiclePage = async ({
           description="Si tuviste algún error en el formulario de entrada, corregilo acá!."
         />
       </div>
-      <VehicleForm initialData={vehicle} configurations={configs} />
+      <VehicleForm initialData={vehicle} />
     </div>
   );
 };

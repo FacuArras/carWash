@@ -21,10 +21,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 import { Skeleton } from "@/components/ui/skeleton";
-
-interface VehicleFormProps {
-  vehiclesConfiguration: string[];
-}
+import { useConfigurationsStore } from "@/store/configurations";
 
 const formSchema = z.object({
   vehicle: z.string().min(1, {
@@ -34,11 +31,14 @@ const formSchema = z.object({
 
 type VehicleFormValues = z.infer<typeof formSchema>;
 
-const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
+const VehicleForm = () => {
   const [loading, setLoading] = useState(true);
   const [vehicles, setVehicles] = useState<string[]>([]);
   const params = useParams();
   const router = useRouter();
+  const vehiclesConfiguration = useConfigurationsStore(
+    (state) => state.currentConfiguration
+  );
 
   const form = useForm<VehicleFormValues>({
     resolver: zodResolver(formSchema),
@@ -49,7 +49,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
     if (!vehiclesConfiguration) {
       setLoading(true);
     } else {
-      setVehicles(vehiclesConfiguration);
+      setVehicles(vehiclesConfiguration.vehicle);
       setLoading(false);
     }
   }, [vehiclesConfiguration]);
@@ -68,6 +68,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
       );
 
       setVehicles((prevVehicles) => [...prevVehicles, values.vehicle]);
+
+      useConfigurationsStore.getState().addVehicle(values.vehicle);
     } catch (error) {
       router.refresh();
     } finally {
@@ -78,10 +80,6 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
   const onDelete = async (data: string) => {
     try {
       setLoading(true);
-
-      setVehicles((prevVehicles) =>
-        prevVehicles.filter((vehicle) => vehicle !== data)
-      );
 
       await toast.promise(
         axios.delete(`/api/${params.clientId}/config`, {
@@ -94,7 +92,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({ vehiclesConfiguration }) => {
         }
       );
 
-      router.refresh();
+      setVehicles((prevVehicles) =>
+        prevVehicles.filter((vehicle) => vehicle !== data)
+      );
+
+      useConfigurationsStore.getState().removeVehicle(data);
     } catch (error) {
       router.refresh();
     } finally {
