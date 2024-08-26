@@ -72,7 +72,7 @@ const formSchema = z.object({
 
 const EntryForm = () => {
   const [loading, setLoading] = useState(false);
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number | undefined>(undefined);
   const router = useRouter();
   const params = useParams();
   const configurations = useConfigurationsStore(
@@ -91,7 +91,7 @@ const EntryForm = () => {
       licensePlate: "",
       color: "",
       phoneNumber: undefined,
-      price: 0,
+      price: undefined,
       typeOfCarWash: "",
       brand: "",
       observations: "",
@@ -101,9 +101,9 @@ const EntryForm = () => {
   const handleTypeOfCarWashChange = (value: string) => {
     form.setValue("typeOfCarWash", value);
     const selected = typeOfCarWash?.find((item) => item.type === value);
-    const newPrice = selected ? selected.price : 0;
+    const newPrice = selected ? selected.price : undefined;
     setPrice(newPrice);
-    form.setValue("price", newPrice);
+    form.setValue("price", newPrice!);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -268,17 +268,16 @@ const EntryForm = () => {
               name="price"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>Precio del lavado</FormLabel>
+                  <FormLabel>Precio</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       disabled={loading}
                       placeholder="5000"
-                      value={price}
+                      value={field.value ?? ""}
                       onChange={(e) => {
-                        const value = parseFloat(e.target.value);
-                        field.onChange(isNaN(value) ? 8500 : value); // Default price if NaN
-                        setPrice(isNaN(value) ? 8500 : value); // Default price if NaN
+                        const value = e.target.value;
+                        field.onChange(value === "" ? "" : parseFloat(value));
                       }}
                     />
                   </FormControl>

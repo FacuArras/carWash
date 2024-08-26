@@ -383,7 +383,12 @@ const VehicleHistorial: React.FC<VehicleHistorialProps> = ({ initialData }) => {
                 <FormItem>
                   <FormLabel>Color del vehículo</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Blanco" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Blanco"
+                      readOnly={isNotEditable}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
